@@ -14,10 +14,6 @@
         body {
             font-family: 'Inter', sans-serif;
         }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-        }
         .gradient-header {
             background: linear-gradient(135deg, #0f766e 0%, #0369a1 100%);
         }
@@ -31,6 +27,70 @@
     </style>
 </head>
 <body class="bg-slate-100 min-h-screen text-slate-800 flex flex-col justify-between">
+
+    <!-- Modal de Bienvenida / Aviso Importante con Logo -->
+    <div id="welcomeModal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4 transition-opacity duration-300">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 text-center shadow-2xl space-y-4 border border-slate-100">
+            
+            <!-- Logo o Marca del Creador -->
+            <div class="flex justify-center items-center">
+                <!-- Reemplaza 'src' por la URL de tu logo si la tienes, o usa esta insignia elegante -->
+                <div class="bg-teal-50 border border-teal-200 rounded-2xl p-3 flex items-center gap-2">
+                    <i data-lucide="code-2" class="w-6 h-6 text-teal-600"></i>
+                    <span class="font-bold text-slate-800 text-sm tracking-wide">Desarrollado por Tidreamsoporte</span>
+                </div>
+            </div>
+
+            <div class="bg-amber-50 rounded-2xl p-4 text-amber-900 text-left border border-amber-200 space-y-2">
+                <div class="flex items-center gap-2 font-bold text-amber-700 text-sm">
+                    <i data-lucide="alert-triangle" class="w-5 h-5 flex-shrink-0 text-amber-600"></i>
+                    <span>Aviso Importante</span>
+                </div>
+                <p class="text-xs leading-relaxed text-amber-900/90">
+                    Esta es una aplicación informativa independiente. Los horarios publicados son de referencia según las pizarras oficiales. No nos hacemos responsables por imprevistos, retrasos o modificaciones de salida de la empresa de buses.
+                </p>
+            </div>
+
+            <button onclick="closeWelcomeModal()" class="w-full bg-teal-700 hover:bg-teal-800 text-white font-bold py-3.5 px-4 rounded-2xl text-sm transition-all shadow-md active:scale-95 flex items-center justify-center gap-2">
+                <span>Entendido y Continuar</span>
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal de Recordatorio en Calendario -->
+    <div id="reminderModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[90] hidden items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 text-center shadow-2xl space-y-4">
+            <div class="w-12 h-12 bg-teal-100 text-teal-700 rounded-2xl flex items-center justify-center mx-auto">
+                <i data-lucide="bell-ring" class="w-6 h-6"></i>
+            </div>
+            
+            <div>
+                <h3 class="font-bold text-slate-800 text-lg">Crear Recordatorio</h3>
+                <p id="reminderModalSub" class="text-xs text-slate-500 mt-1"></p>
+            </div>
+
+            <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200 text-left space-y-1">
+                <div class="text-xs font-bold text-slate-700" id="reminderRouteName"></div>
+                <div class="text-xs text-teal-700 font-semibold" id="reminderTimeText"></div>
+                <div class="text-[11px] text-slate-400">Notificación automática 15 minutos antes.</div>
+            </div>
+
+            <div class="space-y-2 pt-1">
+                <button onclick="addToGoogleCalendar()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-4 rounded-2xl text-xs flex items-center justify-center gap-2 transition-all">
+                    <i data-lucide="calendar" class="w-4 h-4"></i>
+                    <span>Agregar a Google Calendar</span>
+                </button>
+                <button onclick="downloadICSFile()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-semibold py-2.5 px-4 rounded-2xl text-xs flex items-center justify-center gap-2 transition-all">
+                    <i data-lucide="download" class="w-4 h-4"></i>
+                    <span>Apple / Samsung Calendar (.ics)</span>
+                </button>
+                <button onclick="closeReminderModal()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold py-2 px-4 rounded-2xl text-xs transition-all">
+                    <span>Cancelar</span>
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- Navbar / Header -->
     <header class="gradient-header text-white shadow-lg sticky top-0 z-50">
@@ -149,7 +209,7 @@
             </div>
         </section>
 
-        <!-- Mensaje de Búsqueda por Hora (Resultado de "¿Pasa bus a esta hora?") -->
+        <!-- Mensaje de Búsqueda por Hora -->
         <div id="searchResultBox" class="hidden"></div>
 
         <!-- Lista de Tarjetas de Rutas -->
@@ -166,14 +226,14 @@
             <span class="font-semibold text-slate-200">Horarios Referenciales de Recorrido</span>
         </div>
         
-        <!-- Aviso de Responsabilidad -->
+        <!-- Marca e Información del Desarrollador -->
         <div class="max-w-xl mx-auto bg-slate-800/80 border border-slate-700/60 rounded-2xl p-3 text-[11px] text-slate-300 space-y-1">
-            <p class="font-bold text-amber-400 flex items-center justify-center gap-1">
-                <i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>
-                Aviso importante
+            <p class="font-bold text-teal-400 flex items-center justify-center gap-1">
+                <i data-lucide="code" class="w-3.5 h-3.5"></i>
+                Sistema Desarrollado por Tidreamsoporte
             </p>
             <p class="leading-relaxed">
-                Esta aplicación es una herramienta informativa independiente. Los horarios son de carácter referencial basados en la información oficial disponible. No nos responsabilizamos por retrasos, modificaciones de horario o suspensiones de recorridos realizados por los operadores de bus.
+                Herramienta creada para facilitar la consulta del transporte público regional.
             </p>
         </div>
 
@@ -321,8 +381,9 @@
             ]
         };
 
-        let realTodayType = 'weekday'; // 'weekday', 'saturday', 'sunday'
+        let realTodayType = 'weekday';
         let currentDayFilter = 'weekday'; 
+        let selectedBusForReminder = null;
 
         const DAY_NAMES = {
             weekday: 'Lunes a Viernes',
@@ -337,6 +398,10 @@
             updateNextBusBanner();
         };
 
+        function closeWelcomeModal() {
+            document.getElementById('welcomeModal').classList.add('hidden');
+        }
+
         function startClock() {
             const clockEl = document.getElementById('liveClock');
             function update() {
@@ -349,7 +414,7 @@
         }
 
         function detectCurrentDay() {
-            const today = new Date().getDay(); // 0: Domingo, 6: Sábado, 1-5: L-V
+            const today = new Date().getDay();
             const badge = document.getElementById('detectedDayBadge');
             
             if (today === 0) {
@@ -546,7 +611,7 @@
                         <div>
                             <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2.5 flex items-center justify-between">
                                 <span>Salidas programadas (${route.times.length})</span>
-                                ${isViewingToday ? '<span class="text-[10px] text-teal-600 font-semibold">* Resaltado el próximo bus</span>' : '<span class="text-[10px] text-slate-400 font-normal">* Modo consulta (otro día)</span>'}
+                                <span class="text-[10px] text-teal-600 font-semibold">💡 Toca la hora para crear recordatorio</span>
                             </div>
                             
                             <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">
@@ -556,24 +621,26 @@
                                     const isNext = isViewingToday && (time === nextBusTime);
                                     const note = route.notes && route.notes[time] ? route.notes[time] : null;
 
-                                    let bgClass = "bg-slate-50 text-slate-700 border-slate-200 hover:border-slate-300";
+                                    let bgClass = "bg-slate-50 text-slate-700 border-slate-200 hover:border-teal-400 hover:bg-teal-50 cursor-pointer";
 
                                     if (isViewingToday) {
                                         if (isNext) {
-                                            bgClass = "bg-teal-600 text-white font-bold ring-2 ring-teal-600 ring-offset-1 border-transparent shadow-sm";
+                                            bgClass = "bg-teal-600 text-white font-bold ring-2 ring-teal-600 ring-offset-1 border-transparent shadow-sm cursor-pointer";
                                         } else if (isPassed) {
-                                            bgClass = "bg-slate-100 text-slate-400 border-slate-100 opacity-60";
+                                            bgClass = "bg-slate-100 text-slate-400 border-slate-100 opacity-60 cursor-pointer";
                                         }
                                     } else {
-                                        // Cuando no es hoy, todos los botones se ven neutros e iguales (gris tenue)
-                                        bgClass = "bg-slate-100/90 text-slate-700 border-slate-200";
+                                        bgClass = "bg-slate-100/90 text-slate-700 border-slate-200 cursor-pointer";
                                     }
 
                                     return `
-                                        <div class="relative group border rounded-2xl p-2 text-center transition-all ${bgClass}">
-                                            <div class="text-sm font-bold">${time}</div>
+                                        <button onclick="openReminderModal('${route.name}', '${time}', '${route.via}')" class="relative group border rounded-2xl p-2 text-center transition-all ${bgClass}">
+                                            <div class="text-sm font-bold flex items-center justify-center gap-1">
+                                                <span>${time}</span>
+                                                <i data-lucide="bell" class="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                                            </div>
                                             ${note ? `<div class="text-[9px] truncate opacity-90 font-normal leading-tight mt-0.5" title="${note}">${note}</div>` : ''}
-                                        </div>
+                                        </button>
                                     `;
                                 }).join('')}
                             </div>
@@ -584,6 +651,87 @@
             }).join('');
 
             lucide.createIcons();
+        }
+
+        // Lógica para Abrir Modal de Recordatorio
+        function openReminderModal(routeName, time, via) {
+            selectedBusForReminder = { routeName, time, via };
+            document.getElementById('reminderRouteName').innerText = routeName + ` (${via})`;
+            document.getElementById('reminderTimeText').innerText = `Salida: ${time} hrs (${DAY_NAMES[currentDayFilter]})`;
+            document.getElementById('reminderModalSub').innerText = `Configura una alarma en tu teléfono para el bus de las ${time} hrs`;
+            
+            const modal = document.getElementById('reminderReminderModal') || document.getElementById('reminderModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            lucide.createIcons();
+        }
+
+        function closeReminderModal() {
+            const modal = document.getElementById('reminderModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        // Generar evento para Google Calendar
+        function addToGoogleCalendar() {
+            if (!selectedBusForReminder) return;
+            const { routeName, time, via } = selectedBusForReminder;
+
+            // Calcular fecha para el próximo evento según el día seleccionado
+            const now = new Date();
+            const [hours, minutes] = time.split(':').map(Number);
+            const eventDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
+
+            // Ajustar formato YYYYMMDDTHHMMSSZ
+            const formatGCalDate = (d) => d.toISOString().replace(/-|:|\.\d\d\d/g, '');
+            const endDate = new Date(eventDate.getTime() + 30 * 60000); // 30 minutos de duración
+
+            const title = encodeURIComponent(`Bus: ${routeName}`);
+            const details = encodeURIComponent(`Salida del bus ${routeName} (${via}). Generado por Huincabus App / Tidreamsoporte.`);
+            const dates = `${formatGCalDate(eventDate)}/${formatGCalDate(endDate)}`;
+
+            const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${dates}&details=${details}&add=15`;
+            window.open(gcalUrl, '_blank');
+            closeReminderModal();
+        }
+
+        // Generar archivo .ics para Apple / Samsung
+        function downloadICSFile() {
+            if (!selectedBusForReminder) return;
+            const { routeName, time, via } = selectedBusForReminder;
+
+            const now = new Date();
+            const [hours, minutes] = time.split(':').map(Number);
+            const eventDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
+            const endDate = new Date(eventDate.getTime() + 30 * 60000);
+
+            const formatDate = (d) => d.toISOString().replace(/-|:|\.\d\d\d/g, '').slice(0, 15) + 'Z';
+
+            const icsContent = 
+`BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Huincabus App//Tidreamsoporte//ES
+BEGIN:VEVENT
+SUMMARY:Bus: ${routeName}
+DESCRIPTION:Salida del bus ${routeName} (${via}). Notificación 15 min antes.
+DTSTART:${formatDate(eventDate)}
+DTEND:${formatDate(endDate)}
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Recordatorio de salida de Bus
+TRIGGER:-PT15M
+END:VALARM
+END:VEVENT
+END:VCALENDAR`;
+
+            const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.setAttribute('download', `bus_${time.replace(':', '')}.ics`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            closeReminderModal();
         }
 
         function checkBusAtTime() {
@@ -635,44 +783,4 @@
                     </div>
                     <ul class="space-y-1.5 pl-8 list-disc">
                         ${matchExact.map(m => `
-                            <li><strong class="text-emerald-950">${m.route}</strong> (${m.via})</li>
-                        `).join('')}
-                    </ul>
-                `;
-            } else if (matchClose.length > 0) {
-                resultBox.className = "bg-sky-50 border border-sky-200 text-sky-900 p-4 rounded-3xl text-sm space-y-2 shadow-sm";
-                resultBox.innerHTML = `
-                    <div class="flex items-center gap-2 text-sky-800 font-bold text-base">
-                        <i data-lucide="info" class="w-6 h-6 text-sky-600"></i>
-                        Para ${dayLabel} no hay bus exacto a las ${timeInput} hrs, pero los más cercanos son:
-                    </div>
-                    <ul class="space-y-1.5 pl-8 list-disc">
-                        ${matchClose.map(m => `
-                            <li>
-                                Salida a las <strong class="text-sky-950 text-base">${m.time} hrs</strong> (+${m.diff} min) - 
-                                <span>${m.route} (${m.via})</span>
-                            </li>
-                        `).join('')}
-                    </ul>
-                `;
-            } else {
-                resultBox.className = "bg-slate-100 border border-slate-300 text-slate-700 p-4 rounded-3xl text-sm flex items-start gap-3 shadow-sm";
-                resultBox.innerHTML = `
-                    <i data-lucide="x-circle" class="w-6 h-6 text-slate-400 flex-shrink-0 mt-0.5"></i>
-                    <div>
-                        <strong class="text-slate-900 font-bold">No se encontraron buses cercanos a las ${timeInput} hrs (${dayLabel}).</strong>
-                        <p class="text-xs text-slate-500 mt-1">Revisa la lista completa abajo para ver los horarios más próximos.</p>
-                    </div>
-                `;
-            }
-
-            lucide.createIcons();
-        }
-
-        function resetTimeQuery() {
-            document.getElementById('timeQuery').value = '';
-            document.getElementById('searchResultBox').classList.add('hidden');
-        }
-    </script>
-</body>
-</html>
+                            <li><strong class="text-emerald-950">${m.route}
