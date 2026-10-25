@@ -17,6 +17,9 @@
         .gradient-header {
             background: linear-gradient(135deg, #0f766e 0%, #0369a1 100%);
         }
+        .banner-bg {
+            background: linear-gradient(135deg, #065f46 0%, #0f766e 50%, #0369a1 100%);
+        }
         .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
@@ -46,7 +49,6 @@
                 </p>
             </div>
 
-            <!-- Botón con evento directo en línea para garantizar apertura -->
             <button onclick="document.getElementById('welcomeModal').style.display = 'none';" style="width: 100%; background: #0f766e; color: white; font-weight: bold; padding: 0.875rem 1rem; border-radius: 1rem; font-size: 0.875rem; border: none; cursor: pointer; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
                 Entendido y Continuar
             </button>
@@ -87,23 +89,22 @@
         </div>
     </div>
 
-    <!-- Navbar / Header -->
-    <header class="gradient-header text-white shadow-lg sticky top-0 z-50">
+    <!-- Navbar / Banner Superior con tu Imagen -->
+    <header class="banner-bg text-white shadow-xl sticky top-0 z-50 border-b border-teal-600/30">
         <div class="max-w-4xl mx-auto px-4 py-4 sm:px-6">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-3">
-                    <div class="bg-white/20 p-2.5 rounded-2xl backdrop-blur-md">
-                        <i data-lucide="bus" class="w-7 h-7 text-yellow-300"></i>
-                    </div>
-                    <div>
-                        <h1 class="text-xl sm:text-2xl font-bold tracking-tight">Horario Buses Huincabus</h1>
-                        <p class="text-xs text-teal-100 font-medium">Galvarino • Cholchol • Temuco • Lautaro</p>
-                    </div>
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                
+                <!-- Tu Imagen en la Cabecera -->
+                <div class="flex items-center justify-center sm:justify-start">
+                    <img src="busintercomunal.png" alt="Buses Interurbanos" class="h-12 sm:h-14 object-contain filter drop-shadow-md">
                 </div>
-                <div class="text-right bg-white/10 px-3 py-1.5 rounded-xl border border-white/20">
-                    <div class="text-[10px] text-teal-100 uppercase font-bold tracking-wider">Hora Actual</div>
-                    <div id="liveClock" class="text-sm sm:text-base font-bold text-yellow-300 flex items-center justify-end">--:--:--</div>
+
+                <!-- Reloj / Hora Actual Estilizada -->
+                <div class="text-center sm:text-right bg-black/20 px-4 py-2 rounded-2xl border border-white/15 backdrop-blur-sm shadow-sm w-full sm:w-auto">
+                    <div class="text-[10px] text-teal-200 uppercase font-bold tracking-widest">Hora Actual</div>
+                    <div id="liveClock" class="text-base sm:text-lg font-extrabold text-yellow-300 tracking-wider">--:--:-- hrs</div>
                 </div>
+
             </div>
         </div>
     </header>
@@ -232,7 +233,7 @@
             </p>
         </div>
 
-        <p class="text-slate-500 text-[10px]">Si tienes alguna sugerencia o comentario contactanos por nuestros canaales oficiales.</p>
+        <p class="text-slate-500 text-[10px]">Si tienes alguna sugerencia o comentario contactanos por nuestros canales oficiales.</p>
     </footer>
 
     <!-- LÓGICA DE LA APLICACIÓN -->
