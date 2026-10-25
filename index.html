@@ -28,17 +28,13 @@
 </head>
 <body class="bg-slate-100 min-h-screen text-slate-800 flex flex-col justify-between">
 
-    <!-- Modal de Bienvenida / Aviso Importante con Logo -->
+    <!-- Modal de Bienvenida / Aviso Importante con tu Logo -->
     <div id="welcomeModal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4 transition-opacity duration-300">
         <div class="bg-white rounded-3xl max-w-md w-full p-6 text-center shadow-2xl space-y-4 border border-slate-100">
             
-            <!-- Logo o Marca del Creador -->
-            <div class="flex justify-center items-center">
-                <!-- Reemplaza 'src' por la URL de tu logo si la tienes, o usa esta insignia elegante -->
-                <div class="bg-teal-50 border border-teal-200 rounded-2xl p-3 flex items-center gap-2">
-                    <i data-lucide="code-2" class="w-6 h-6 text-teal-600"></i>
-                    <span class="font-bold text-slate-800 text-sm tracking-wide">Desarrollado por Tidreamsoporte</span>
-                </div>
+            <!-- Logo de Tidreamsoporte -->
+            <div class="flex justify-center items-center py-2">
+                <img src="https://raw.githubusercontent.com/Tidreamsoporte/Catalogo/refs/heads/main/logo%20tidreams.png" alt="Logo Tidreamsoporte" class="h-16 mx-auto object-contain">
             </div>
 
             <div class="bg-amber-50 rounded-2xl p-4 text-amber-900 text-left border border-amber-200 space-y-2">
@@ -399,7 +395,11 @@
         };
 
         function closeWelcomeModal() {
-            document.getElementById('welcomeModal').classList.add('hidden');
+            const modal = document.getElementById('welcomeModal');
+            modal.classList.add('opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
         }
 
         function startClock() {
@@ -459,9 +459,8 @@
             if (diff < 0) return null;
             const hours = Math.floor(diff / 60);
             const mins = diff % 60;
-            if (hours === 0) return `en ${mins} min`;
-            if (mins === 0) return `en ${hours} hr`;
-            return `en ${hours} hr ${mins} min`;
+            if (hours === 0) return `en ${mins} min`; if (mins === 0) return `en ${hours} hr`;
+            return `en ${hours} hr${mins} min`;
         }
 
         function updateNextBusBanner() {
@@ -546,241 +545,4 @@
 
             if (filteredRoutes.length === 0) {
                 container.innerHTML = `
-                    <div class="bg-white rounded-3xl p-8 text-center text-slate-500 shadow-sm border border-slate-200">
-                        <i data-lucide="alert-circle" class="w-10 h-10 mx-auto text-amber-500 mb-2"></i>
-                        <p class="font-bold">No hay recorridos disponibles para esta ruta en el día seleccionado.</p>
-                    </div>
-                `;
-                lucide.createIcons();
-                return;
-            }
-
-            container.innerHTML = filteredRoutes.map(route => {
-                let nextBusTime = null;
-                let nextBusDiff = null;
-
-                if (isViewingToday) {
-                    route.times.forEach(t => {
-                        const busMins = timeToMinutes(t);
-                        if (busMins >= currentMins && nextBusTime === null) {
-                            nextBusTime = t;
-                            nextBusDiff = busMins - currentMins;
-                        }
-                    });
-                }
-
-                return `
-                    <div class="bg-white rounded-3xl p-5 shadow-sm border-l-8 ${route.color} border-y border-r border-slate-200/80 transition-all">
-                        
-                        <!-- Encabezado de la Ruta -->
-                        <div class="flex flex-wrap items-start justify-between gap-2 mb-4 pb-3 border-b border-slate-100">
-                            <div>
-                                <h3 class="font-bold text-slate-800 text-base sm:text-lg flex items-center gap-2">
-                                    <i data-lucide="bus" class="w-5 h-5 text-teal-600"></i>
-                                    ${route.name}
-                                </h3>
-                                <span class="inline-block mt-1 text-xs font-semibold px-2.5 py-0.5 rounded-md ${route.badgeColor}">
-                                    ${route.via}
-                                </span>
-                            </div>
-
-                            ${isViewingToday ? (
-                                nextBusTime ? `
-                                    <div class="bg-amber-50 border border-amber-200/60 text-amber-900 px-3 py-1.5 rounded-2xl flex items-center gap-2 text-xs">
-                                        <span class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span>
-                                        <div>
-                                            <span class="font-medium text-amber-700">Próximo hoy:</span> 
-                                            <strong class="font-bold text-sm">${nextBusTime}</strong> 
-                                            <span class="text-[11px] text-amber-700 font-semibold">(${formatMinutesDiff(nextBusDiff)})</span>
-                                        </div>
-                                    </div>
-                                ` : `
-                                    <div class="bg-slate-100 text-slate-500 px-3 py-1.5 rounded-2xl text-xs font-medium">
-                                        Sin más salidas hoy
-                                    </div>
-                                `
-                            ) : `
-                                <div class="bg-slate-100 text-slate-600 border border-slate-200 px-3 py-1.5 rounded-2xl text-xs font-medium flex items-center gap-1.5">
-                                    <i data-lucide="calendar" class="w-3.5 h-3.5 text-slate-500"></i>
-                                    <span>Horario general ${DAY_NAMES[currentDayFilter]}</span>
-                                </div>
-                            `}
-                        </div>
-
-                        <!-- Grid de Horarios -->
-                        <div>
-                            <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2.5 flex items-center justify-between">
-                                <span>Salidas programadas (${route.times.length})</span>
-                                <span class="text-[10px] text-teal-600 font-semibold">💡 Toca la hora para crear recordatorio</span>
-                            </div>
-                            
-                            <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">
-                                ${route.times.map(time => {
-                                    const busMins = timeToMinutes(time);
-                                    const isPassed = isViewingToday && (busMins < currentMins);
-                                    const isNext = isViewingToday && (time === nextBusTime);
-                                    const note = route.notes && route.notes[time] ? route.notes[time] : null;
-
-                                    let bgClass = "bg-slate-50 text-slate-700 border-slate-200 hover:border-teal-400 hover:bg-teal-50 cursor-pointer";
-
-                                    if (isViewingToday) {
-                                        if (isNext) {
-                                            bgClass = "bg-teal-600 text-white font-bold ring-2 ring-teal-600 ring-offset-1 border-transparent shadow-sm cursor-pointer";
-                                        } else if (isPassed) {
-                                            bgClass = "bg-slate-100 text-slate-400 border-slate-100 opacity-60 cursor-pointer";
-                                        }
-                                    } else {
-                                        bgClass = "bg-slate-100/90 text-slate-700 border-slate-200 cursor-pointer";
-                                    }
-
-                                    return `
-                                        <button onclick="openReminderModal('${route.name}', '${time}', '${route.via}')" class="relative group border rounded-2xl p-2 text-center transition-all ${bgClass}">
-                                            <div class="text-sm font-bold flex items-center justify-center gap-1">
-                                                <span>${time}</span>
-                                                <i data-lucide="bell" class="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity"></i>
-                                            </div>
-                                            ${note ? `<div class="text-[9px] truncate opacity-90 font-normal leading-tight mt-0.5" title="${note}">${note}</div>` : ''}
-                                        </button>
-                                    `;
-                                }).join('')}
-                            </div>
-                        </div>
-
-                    </div>
-                `;
-            }).join('');
-
-            lucide.createIcons();
-        }
-
-        // Lógica para Abrir Modal de Recordatorio
-        function openReminderModal(routeName, time, via) {
-            selectedBusForReminder = { routeName, time, via };
-            document.getElementById('reminderRouteName').innerText = routeName + ` (${via})`;
-            document.getElementById('reminderTimeText').innerText = `Salida: ${time} hrs (${DAY_NAMES[currentDayFilter]})`;
-            document.getElementById('reminderModalSub').innerText = `Configura una alarma en tu teléfono para el bus de las ${time} hrs`;
-            
-            const modal = document.getElementById('reminderReminderModal') || document.getElementById('reminderModal');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            lucide.createIcons();
-        }
-
-        function closeReminderModal() {
-            const modal = document.getElementById('reminderModal');
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-        }
-
-        // Generar evento para Google Calendar
-        function addToGoogleCalendar() {
-            if (!selectedBusForReminder) return;
-            const { routeName, time, via } = selectedBusForReminder;
-
-            // Calcular fecha para el próximo evento según el día seleccionado
-            const now = new Date();
-            const [hours, minutes] = time.split(':').map(Number);
-            const eventDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
-
-            // Ajustar formato YYYYMMDDTHHMMSSZ
-            const formatGCalDate = (d) => d.toISOString().replace(/-|:|\.\d\d\d/g, '');
-            const endDate = new Date(eventDate.getTime() + 30 * 60000); // 30 minutos de duración
-
-            const title = encodeURIComponent(`Bus: ${routeName}`);
-            const details = encodeURIComponent(`Salida del bus ${routeName} (${via}). Generado por Huincabus App / Tidreamsoporte.`);
-            const dates = `${formatGCalDate(eventDate)}/${formatGCalDate(endDate)}`;
-
-            const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${dates}&details=${details}&add=15`;
-            window.open(gcalUrl, '_blank');
-            closeReminderModal();
-        }
-
-        // Generar archivo .ics para Apple / Samsung
-        function downloadICSFile() {
-            if (!selectedBusForReminder) return;
-            const { routeName, time, via } = selectedBusForReminder;
-
-            const now = new Date();
-            const [hours, minutes] = time.split(':').map(Number);
-            const eventDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
-            const endDate = new Date(eventDate.getTime() + 30 * 60000);
-
-            const formatDate = (d) => d.toISOString().replace(/-|:|\.\d\d\d/g, '').slice(0, 15) + 'Z';
-
-            const icsContent = 
-`BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//Huincabus App//Tidreamsoporte//ES
-BEGIN:VEVENT
-SUMMARY:Bus: ${routeName}
-DESCRIPTION:Salida del bus ${routeName} (${via}). Notificación 15 min antes.
-DTSTART:${formatDate(eventDate)}
-DTEND:${formatDate(endDate)}
-BEGIN:VALARM
-ACTION:DISPLAY
-DESCRIPTION:Recordatorio de salida de Bus
-TRIGGER:-PT15M
-END:VALARM
-END:VEVENT
-END:VCALENDAR`;
-
-            const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8;' });
-            const link = document.createElement('a');
-            link.href = window.URL.createObjectURL(blob);
-            link.setAttribute('download', `bus_${time.replace(':', '')}.ics`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            closeReminderModal();
-        }
-
-        function checkBusAtTime() {
-            const timeInput = document.getElementById('timeQuery').value;
-            const resultBox = document.getElementById('searchResultBox');
-
-            if (!timeInput) {
-                resultBox.className = "bg-amber-50 border border-amber-200 text-amber-800 p-4 rounded-2xl text-sm flex items-start gap-3";
-                resultBox.innerHTML = `
-                    <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5"></i>
-                    <div>
-                        <strong>Por favor ingresa una hora</strong> para realizar la búsqueda.
-                    </div>
-                `;
-                resultBox.classList.remove('hidden');
-                lucide.createIcons();
-                return;
-            }
-
-            const targetMins = timeToMinutes(timeInput);
-            const routes = SCHEDULES[currentDayFilter] || [];
-            
-            let matchExact = [];
-            let matchClose = []; 
-
-            routes.forEach(route => {
-                route.times.forEach(t => {
-                    const busMins = timeToMinutes(t);
-                    const diff = busMins - targetMins;
-
-                    if (diff === 0) {
-                        matchExact.push({ route: route.name, time: t, via: route.via });
-                    } else if (diff > 0 && diff <= 30) {
-                        matchClose.push({ route: route.name, time: t, via: route.via, diff: diff });
-                    }
-                });
-            });
-
-            resultBox.classList.remove('hidden');
-
-            const dayLabel = DAY_NAMES[currentDayFilter];
-
-            if (matchExact.length > 0) {
-                resultBox.className = "bg-emerald-50 border border-emerald-200 text-emerald-900 p-4 rounded-3xl text-sm space-y-2 shadow-sm";
-                resultBox.innerHTML = `
-                    <div class="flex items-center gap-2 text-emerald-700 font-bold text-base">
-                        <i data-lucide="check-circle-2" class="w-6 h-6 text-emerald-600"></i>
-                        ¡Sí! (${dayLabel}) Pasa bus exactamente a las ${timeInput} hrs:
-                    </div>
-                    <ul class="space-y-1.5 pl-8 list-disc">
-                        ${matchExact.map(m => `
-                            <li><strong class="text-emerald-950">${m.route}
+                    <div
