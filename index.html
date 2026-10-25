@@ -21,7 +21,6 @@
         .gradient-header {
             background: linear-gradient(135deg, #0f766e 0%, #0369a1 100%);
         }
-        /* Hide scrollbar for clean horizontal scrolling */
         .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
@@ -71,7 +70,7 @@
                     <span id="detectedDayBadge" class="text-xs font-medium bg-black/20 px-2.5 py-1 rounded-lg"></span>
                 </div>
                 <div>
-                    <h2 class="text-sm font-medium text-amber-100">Próximo Bus a salir hoy</h2>
+                    <h2 id="nextBusMainTitle" class="text-sm font-medium text-amber-100">Próximo Bus a salir hoy</h2>
                     <div id="nextBusMainText" class="text-2xl sm:text-3xl font-extrabold text-white mt-1">
                         Buscando próximo horario...
                     </div>
@@ -178,12 +177,11 @@
             </p>
         </div>
 
-        <p class="text-slate-500 text-[10px]">Se sugiere siempre revisar los horarios en boleteria.</p>
+        <p class="text-slate-500 text-[10px]">Se sugiere el uso de mascarilla al interior de las máquinas.</p>
     </footer>
 
     <!-- LÓGICA DE LA APLICACIÓN -->
     <script>
-        // Datos de horarios organizados por tipo de día y ruta
         const SCHEDULES = {
             weekday: [
                 {
@@ -323,10 +321,15 @@
             ]
         };
 
-        let currentDayFilter = 'weekday'; // 'weekday', 'saturday', 'sunday'
-        let currentSearchTime = null; // null o "HH:MM"
+        let realTodayType = 'weekday'; // 'weekday', 'saturday', 'sunday'
+        let currentDayFilter = 'weekday'; 
 
-        // Inicialización al cargar la página
+        const DAY_NAMES = {
+            weekday: 'Lunes a Viernes',
+            saturday: 'Sábados',
+            sunday: 'Domingos y Festivos'
+        };
+
         window.onload = function() {
             detectCurrentDay();
             startClock();
@@ -334,36 +337,33 @@
             updateNextBusBanner();
         };
 
-        // Reloj en vivo
-       function startClock() {
+        function startClock() {
             const clockEl = document.getElementById('liveClock');
             function update() {
                 const now = new Date();
-                // Usamos 'hour12: false' para forzar el formato 24 hrs (ej: 18:00:00 hrs)
                 clockEl.innerText = now.toLocaleTimeString('es-CL', { hour12: false }) + ' hrs';
-                
-                // Actualizar banner de forma periódica
                 updateNextBusBanner();
             }
             update();
             setInterval(update, 1000);
         }
 
-        // Detección del día actual
         function detectCurrentDay() {
             const today = new Date().getDay(); // 0: Domingo, 6: Sábado, 1-5: L-V
             const badge = document.getElementById('detectedDayBadge');
             
             if (today === 0) {
-                currentDayFilter = 'sunday';
+                realTodayType = 'sunday';
                 badge.innerText = 'Hoy: Domingo / Festivo';
             } else if (today === 6) {
-                currentDayFilter = 'saturday';
+                realTodayType = 'saturday';
                 badge.innerText = 'Hoy: Sábado';
             } else {
-                currentDayFilter = 'weekday';
+                realTodayType = 'weekday';
                 badge.innerText = 'Hoy: Lunes a Viernes';
             }
+            
+            currentDayFilter = realTodayType;
             updateDayButtonsUI();
         }
 
@@ -385,13 +385,11 @@
             });
         }
 
-        // Convertir string "HH:MM" a minutos para facilitar comparaciones
         function timeToMinutes(timeStr) {
             const [hours, minutes] = timeStr.split(':').map(Number);
             return hours * 60 + minutes;
         }
 
-        // Formatear minutos de diferencia en texto
         function formatMinutesDiff(diff) {
             if (diff < 0) return null;
             const hours = Math.floor(diff / 60);
@@ -401,12 +399,28 @@
             return `en ${hours} hr ${mins} min`;
         }
 
-        // Actualiza la tarjeta principal del próximo bus según hora real del dispositivo
         function updateNextBusBanner() {
+            const isViewingToday = (currentDayFilter === realTodayType);
+            const mainTitle = document.getElementById('nextBusMainTitle');
+            const mainText = document.getElementById('nextBusMainText');
+            const subText = document.getElementById('nextBusSubText');
+
+            if (!isViewingToday) {
+                mainTitle.innerText = `Consultando horario diferente al día de hoy`;
+                mainText.innerHTML = `<span class="text-xl sm:text-2xl font-bold">${DAY_NAMES[currentDayFilter]}</span>`;
+                subText.innerHTML = `
+                    <i data-lucide="calendar-clock" class="w-4 h-4 text-amber-200"></i>
+                    <span>Viendo tabla de un día distinto. Los cálculos en tiempo real están desactivados.</span>
+                `;
+                lucide.createIcons();
+                return;
+            }
+
+            mainTitle.innerText = "Próximo Bus a salir hoy";
+
             const now = new Date();
             const currentMins = now.getHours() * 60 + now.getMinutes();
 
-            // Obtenemos todos los buses de las rutas del día actual
             const currentDayRoutes = SCHEDULES[currentDayFilter] || [];
             let upcomingBuses = [];
 
@@ -425,11 +439,7 @@
                 });
             });
 
-            const mainText = document.getElementById('nextBusMainText');
-            const subText = document.getElementById('nextBusSubText');
-
             if (upcomingBuses.length > 0) {
-                // Ordenar por cercanía
                 upcomingBuses.sort((a, b) => a.diff - b.diff);
                 const next = upcomingBuses[0];
 
@@ -455,12 +465,12 @@
             lucide.createIcons();
         }
 
-        // Renderizado principal de tarjetas de ruta
         function renderRoutes() {
             const container = document.getElementById('routesContainer');
             const selectedRouteId = document.getElementById('routeSelect').value;
             const routes = SCHEDULES[currentDayFilter] || [];
 
+            const isViewingToday = (currentDayFilter === realTodayType);
             const now = new Date();
             const currentMins = now.getHours() * 60 + now.getMinutes();
 
@@ -481,17 +491,18 @@
             }
 
             container.innerHTML = filteredRoutes.map(route => {
-                // Encontrar el próximo bus específico de esta ruta
                 let nextBusTime = null;
                 let nextBusDiff = null;
 
-                route.times.forEach(t => {
-                    const busMins = timeToMinutes(t);
-                    if (busMins >= currentMins && nextBusTime === null) {
-                        nextBusTime = t;
-                        nextBusDiff = busMins - currentMins;
-                    }
-                });
+                if (isViewingToday) {
+                    route.times.forEach(t => {
+                        const busMins = timeToMinutes(t);
+                        if (busMins >= currentMins && nextBusTime === null) {
+                            nextBusTime = t;
+                            nextBusDiff = busMins - currentMins;
+                        }
+                    });
+                }
 
                 return `
                     <div class="bg-white rounded-3xl p-5 shadow-sm border-l-8 ${route.color} border-y border-r border-slate-200/80 transition-all">
@@ -508,18 +519,25 @@
                                 </span>
                             </div>
 
-                            ${nextBusTime ? `
-                                <div class="bg-amber-50 border border-amber-200/60 text-amber-900 px-3 py-1.5 rounded-2xl flex items-center gap-2 text-xs">
-                                    <span class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span>
-                                    <div>
-                                        <span class="font-medium text-amber-700">Próximo:</span> 
-                                        <strong class="font-bold text-sm">${nextBusTime}</strong> 
-                                        <span class="text-[11px] text-amber-700 font-semibold">(${formatMinutesDiff(nextBusDiff)})</span>
+                            ${isViewingToday ? (
+                                nextBusTime ? `
+                                    <div class="bg-amber-50 border border-amber-200/60 text-amber-900 px-3 py-1.5 rounded-2xl flex items-center gap-2 text-xs">
+                                        <span class="w-2 h-2 rounded-full bg-amber-500 animate-ping"></span>
+                                        <div>
+                                            <span class="font-medium text-amber-700">Próximo hoy:</span> 
+                                            <strong class="font-bold text-sm">${nextBusTime}</strong> 
+                                            <span class="text-[11px] text-amber-700 font-semibold">(${formatMinutesDiff(nextBusDiff)})</span>
+                                        </div>
                                     </div>
-                                </div>
-                            ` : `
-                                <div class="bg-slate-100 text-slate-500 px-3 py-1.5 rounded-2xl text-xs font-medium">
-                                    Sin más salidas hoy
+                                ` : `
+                                    <div class="bg-slate-100 text-slate-500 px-3 py-1.5 rounded-2xl text-xs font-medium">
+                                        Sin más salidas hoy
+                                    </div>
+                                `
+                            ) : `
+                                <div class="bg-slate-100 text-slate-600 border border-slate-200 px-3 py-1.5 rounded-2xl text-xs font-medium flex items-center gap-1.5">
+                                    <i data-lucide="calendar" class="w-3.5 h-3.5 text-slate-500"></i>
+                                    <span>Horario general ${DAY_NAMES[currentDayFilter]}</span>
                                 </div>
                             `}
                         </div>
@@ -527,23 +545,28 @@
                         <!-- Grid de Horarios -->
                         <div>
                             <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2.5 flex items-center justify-between">
-                                <span>Horarios de Salida (${route.times.length})</span>
-                                <span class="text-[10px] text-slate-400 font-normal">* Marcados en turquesa los próximos hoy</span>
+                                <span>Salidas programadas (${route.times.length})</span>
+                                ${isViewingToday ? '<span class="text-[10px] text-teal-600 font-semibold">* Resaltado el próximo bus</span>' : '<span class="text-[10px] text-slate-400 font-normal">* Modo consulta (otro día)</span>'}
                             </div>
                             
                             <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">
                                 ${route.times.map(time => {
                                     const busMins = timeToMinutes(time);
-                                    const isPassed = busMins < currentMins;
-                                    const isNext = time === nextBusTime;
+                                    const isPassed = isViewingToday && (busMins < currentMins);
+                                    const isNext = isViewingToday && (time === nextBusTime);
                                     const note = route.notes && route.notes[time] ? route.notes[time] : null;
 
-                                    let bgClass = "bg-slate-50 text-slate-700 border-slate-200 hover:border-teal-400";
+                                    let bgClass = "bg-slate-50 text-slate-700 border-slate-200 hover:border-slate-300";
 
-                                    if (isNext) {
-                                        bgClass = "bg-teal-600 text-white font-bold ring-2 ring-teal-600 ring-offset-1 border-transparent shadow-sm";
-                                    } else if (isPassed) {
-                                        bgClass = "bg-slate-100 text-slate-400 border-slate-100 opacity-60";
+                                    if (isViewingToday) {
+                                        if (isNext) {
+                                            bgClass = "bg-teal-600 text-white font-bold ring-2 ring-teal-600 ring-offset-1 border-transparent shadow-sm";
+                                        } else if (isPassed) {
+                                            bgClass = "bg-slate-100 text-slate-400 border-slate-100 opacity-60";
+                                        }
+                                    } else {
+                                        // Cuando no es hoy, todos los botones se ven neutros e iguales (gris tenue)
+                                        bgClass = "bg-slate-100/90 text-slate-700 border-slate-200";
                                     }
 
                                     return `
@@ -563,7 +586,6 @@
             lucide.createIcons();
         }
 
-        // Consultar "¿A esta hora pasa bus?"
         function checkBusAtTime() {
             const timeInput = document.getElementById('timeQuery').value;
             const resultBox = document.getElementById('searchResultBox');
@@ -585,7 +607,7 @@
             const routes = SCHEDULES[currentDayFilter] || [];
             
             let matchExact = [];
-            let matchClose = []; // dentro de 30 minutos después
+            let matchClose = []; 
 
             routes.forEach(route => {
                 route.times.forEach(t => {
@@ -602,12 +624,14 @@
 
             resultBox.classList.remove('hidden');
 
+            const dayLabel = DAY_NAMES[currentDayFilter];
+
             if (matchExact.length > 0) {
                 resultBox.className = "bg-emerald-50 border border-emerald-200 text-emerald-900 p-4 rounded-3xl text-sm space-y-2 shadow-sm";
                 resultBox.innerHTML = `
                     <div class="flex items-center gap-2 text-emerald-700 font-bold text-base">
                         <i data-lucide="check-circle-2" class="w-6 h-6 text-emerald-600"></i>
-                        ¡Sí! Pasa bus exactamente a las ${timeInput} hrs:
+                        ¡Sí! (${dayLabel}) Pasa bus exactamente a las ${timeInput} hrs:
                     </div>
                     <ul class="space-y-1.5 pl-8 list-disc">
                         ${matchExact.map(m => `
@@ -620,12 +644,12 @@
                 resultBox.innerHTML = `
                     <div class="flex items-center gap-2 text-sky-800 font-bold text-base">
                         <i data-lucide="info" class="w-6 h-6 text-sky-600"></i>
-                        No hay bus exacto a las ${timeInput} hrs, pero los más cercanos son:
+                        Para ${dayLabel} no hay bus exacto a las ${timeInput} hrs, pero los más cercanos son:
                     </div>
                     <ul class="space-y-1.5 pl-8 list-disc">
                         ${matchClose.map(m => `
                             <li>
-                                Salida a las <strong class="text-sky-950 text-base">${m.time} hrs</strong> (en ${m.diff} min) - 
+                                Salida a las <strong class="text-sky-950 text-base">${m.time} hrs</strong> (+${m.diff} min) - 
                                 <span>${m.route} (${m.via})</span>
                             </li>
                         `).join('')}
@@ -636,8 +660,8 @@
                 resultBox.innerHTML = `
                     <i data-lucide="x-circle" class="w-6 h-6 text-slate-400 flex-shrink-0 mt-0.5"></i>
                     <div>
-                        <strong class="text-slate-900 font-bold">No se encontraron buses cercanos a las ${timeInput} hrs.</strong>
-                        <p class="text-xs text-slate-500 mt-1">Revisa la lista completa abajo para ver los horarios más próximos antes o después de esa hora.</p>
+                        <strong class="text-slate-900 font-bold">No se encontraron buses cercanos a las ${timeInput} hrs (${dayLabel}).</strong>
+                        <p class="text-xs text-slate-500 mt-1">Revisa la lista completa abajo para ver los horarios más próximos.</p>
                     </div>
                 `;
             }
