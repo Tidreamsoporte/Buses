@@ -161,13 +161,24 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-slate-900 text-slate-400 py-6 border-t border-slate-800 text-center text-xs space-y-2">
+    <footer class="bg-slate-900 text-slate-400 py-6 border-t border-slate-800 text-center text-xs space-y-3 px-4">
         <div class="flex justify-center items-center space-x-2">
             <i data-lucide="bus" class="w-4 h-4 text-teal-400"></i>
-            <span class="font-semibold text-slate-200">Horarios Oficiales de Recorrido</span>
+            <span class="font-semibold text-slate-200">Horarios Referenciales de Recorrido</span>
         </div>
-        <p class="px-4 text-slate-500">Información extraída directamente de los paneles de recorrido oficiales.</p>
-        <p class="text-slate-600">Se sugiere el uso de mascarilla al interior de la máquina.</p>
+        
+        <!-- Aviso de Responsabilidad -->
+        <div class="max-w-xl mx-auto bg-slate-800/80 border border-slate-700/60 rounded-2xl p-3 text-[11px] text-slate-300 space-y-1">
+            <p class="font-bold text-amber-400 flex items-center justify-center gap-1">
+                <i data-lucide="alert-circle" class="w-3.5 h-3.5"></i>
+                Aviso importante
+            </p>
+            <p class="leading-relaxed">
+                Esta aplicación es una herramienta informativa independiente. Los horarios son de carácter referencial basados en la información oficial disponible. No nos responsabilizamos por retrasos, modificaciones de horario o suspensiones de recorridos realizados por los operadores de bus.
+            </p>
+        </div>
+
+        <p class="text-slate-500 text-[10px]">Se sugiere siempre revisar los horarios en boleteria.</p>
     </footer>
 
     <!-- LÓGICA DE LA APLICACIÓN -->
@@ -324,13 +335,14 @@
         };
 
         // Reloj en vivo
-        function startClock() {
+       function startClock() {
             const clockEl = document.getElementById('liveClock');
             function update() {
                 const now = new Date();
-                clockEl.innerText = now.toLocaleTimeString('es-CL');
+                // Usamos 'hour12: false' para forzar el formato 24 hrs (ej: 18:00:00 hrs)
+                clockEl.innerText = now.toLocaleTimeString('es-CL', { hour12: false }) + ' hrs';
                 
-                // Actualizar banner cada minuto o de forma periódica
+                // Actualizar banner de forma periódica
                 updateNextBusBanner();
             }
             update();
