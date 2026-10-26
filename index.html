@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Horarios de Buses Regionales</title>
+    <title>Horarios de Buses Interurbanos</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
@@ -14,42 +14,28 @@
         body {
             font-family: 'Inter', sans-serif;
         }
-        .gradient-header {
-            background: linear-gradient(135deg, #0f766e 0%, #0369a1 100%);
-        }
         .banner-bg {
             background: linear-gradient(135deg, #065f46 0%, #0f766e 50%, #0369a1 100%);
-        }
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
         }
     </style>
 </head>
 <body class="bg-slate-100 min-h-screen text-slate-800 flex flex-col justify-between">
 
-    <!-- Modal de Bienvenida / Aviso Importante con tu Logo -->
+    <!-- Modal de Bienvenida / Aviso Importante -->
     <div id="welcomeModal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.85); z-index: 99999; display: flex; align-items: center; justify-content: center; padding: 1rem;">
         <div style="background: white; width: 100%; max-width: 400px; border-radius: 1.5rem; padding: 1.5rem; text-align: center; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);">
-            
-            <!-- Logo de Tidreamsoporte -->
             <div style="display: flex; justify-content: center; align-items: center; padding-bottom: 0.5rem;">
                 <img src="https://raw.githubusercontent.com/Tidreamsoporte/Buses/refs/heads/main/1.png" alt="Logo Tidreamsoporte" style="height: 4rem; object-fit: contain;">
             </div>
-
             <div style="background: #fffbeb; border: 1px solid #fde68a; border-radius: 1rem; padding: 1rem; text-align: left; margin-bottom: 1.25rem;">
                 <div style="font-weight: bold; color: #b45309; font-size: 0.875rem; margin-bottom: 0.5rem;">
                     ⚠️ Aviso Importante
                 </div>
                 <p style="font-size: 0.75rem; line-height: 1.4; color: #78350f; margin: 0;">
-                    Esta es una aplicación informativa independiente. Los horarios publicados son los publicados en la ventanilla del terminal de buses. No nos hacemos responsables por imprevistos, retrasos o modificaciones de salida de la empresa de buses.
+                    Esta es una aplicación informativa independiente. Los horarios publicados son obtenidos directamente de las pizarras y ventanillas oficiales. No nos hacemos responsables por imprevistos o modificaciones de las empresas operadoras (Huincabus, Barbosa, Turischol, Nehuenmapu).
                 </p>
             </div>
-
-            <button onclick="document.getElementById('welcomeModal').style.display = 'none';" style="width: 100%; background: #0f766e; color: white; font-weight: bold; padding: 0.875rem 1rem; border-radius: 1rem; font-size: 0.875rem; border: none; cursor: pointer; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
+            <button onclick="document.getElementById('welcomeModal').style.display = 'none';" style="width: 100%; background: #0f766e; color: white; font-weight: bold; padding: 0.875rem 1rem; border-radius: 1rem; font-size: 0.875rem; border: none; cursor: pointer;">
                 Entendido y Continuar
             </button>
         </div>
@@ -61,50 +47,42 @@
             <div class="w-12 h-12 bg-teal-100 text-teal-700 rounded-2xl flex items-center justify-center mx-auto">
                 <i data-lucide="bell-ring" class="w-6 h-6"></i>
             </div>
-            
             <div>
                 <h3 class="font-bold text-slate-800 text-lg">Crear Recordatorio</h3>
                 <p id="reminderModalSub" class="text-xs text-slate-500 mt-1"></p>
             </div>
-
             <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200 text-left space-y-1">
                 <div class="text-xs font-bold text-slate-700" id="reminderRouteName"></div>
                 <div class="text-xs text-teal-700 font-semibold" id="reminderTimeText"></div>
                 <div class="text-[11px] text-slate-400">Notificación automática 15 minutos antes.</div>
             </div>
-
             <div class="space-y-2 pt-1">
-                <button onclick="addToGoogleCalendar()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-4 rounded-2xl text-xs flex items-center justify-center gap-2 transition-all cursor-pointer">
+                <button onclick="addToGoogleCalendar()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-4 rounded-2xl text-xs flex items-center justify-center gap-2 cursor-pointer">
                     <i data-lucide="calendar" class="w-4 h-4"></i>
                     <span>Agregar a Google Calendar</span>
                 </button>
-                <button onclick="downloadICSFile()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-semibold py-2.5 px-4 rounded-2xl text-xs flex items-center justify-center gap-2 transition-all cursor-pointer">
+                <button onclick="downloadICSFile()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-semibold py-2.5 px-4 rounded-2xl text-xs flex items-center justify-center gap-2 cursor-pointer">
                     <i data-lucide="download" class="w-4 h-4"></i>
                     <span>Apple / Samsung Calendar (.ics)</span>
                 </button>
-                <button onclick="closeReminderModal()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold py-2 px-4 rounded-2xl text-xs transition-all cursor-pointer">
+                <button onclick="closeReminderModal()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold py-2 px-4 rounded-2xl text-xs cursor-pointer">
                     <span>Cancelar</span>
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Navbar / Banner Superior con Imagen Ampliada -->
+    <!-- Navbar / Banner Superior -->
     <header class="banner-bg text-white shadow-xl sticky top-0 z-50 border-b border-teal-600/30">
         <div class="max-w-4xl mx-auto px-4 py-5 sm:py-6 sm:px-6">
             <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-                
-                <!-- Tu Imagen con tamaño grande y llamativo -->
                 <div class="flex items-center justify-center sm:justify-start">
                     <img src="busintercomunal.png" alt="Buses Interurbanos" class="h-20 sm:h-24 md:h-28 w-auto object-contain filter drop-shadow-lg">
                 </div>
-
-                <!-- Reloj / Hora Actual Estilizada -->
                 <div class="text-center sm:text-right bg-black/20 px-4 py-2.5 rounded-2xl border border-white/15 backdrop-blur-sm shadow-sm w-full sm:w-auto">
                     <div class="text-[10px] text-teal-200 uppercase font-bold tracking-widest">Hora Actual</div>
                     <div id="liveClock" class="text-base sm:text-lg font-extrabold text-yellow-300 tracking-wider">--:--:-- hrs</div>
                 </div>
-
             </div>
         </div>
     </header>
@@ -112,12 +90,12 @@
     <!-- Main Content Container -->
     <main class="max-w-4xl mx-auto px-4 py-6 sm:px-6 w-full flex-grow space-y-6">
 
-        <!-- Banner de Próxima SALIDA Destacada -->
+        <!-- Banner de Próxima SALIDA Destacada (Múltiples Buses simultáneos) -->
         <section class="bg-gradient-to-r from-amber-500 to-orange-500 rounded-3xl p-5 text-white shadow-md relative overflow-hidden">
             <div class="absolute -right-6 -bottom-6 opacity-15">
                 <i data-lucide="clock" class="w-40 h-40"></i>
             </div>
-            <div class="relative z-10 space-y-2">
+            <div class="relative z-10 space-y-3">
                 <div class="flex items-center justify-between">
                     <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-white/20 backdrop-blur-md">
                         <i data-lucide="sparkles" class="w-3.5 h-3.5 text-yellow-200"></i>
@@ -126,22 +104,19 @@
                     <span id="detectedDayBadge" class="text-xs font-medium bg-black/20 px-2.5 py-1 rounded-lg"></span>
                 </div>
                 <div>
-                    <h2 id="nextBusMainTitle" class="text-sm font-medium text-amber-100">Próximo Bus a salir hoy</h2>
+                    <h2 id="nextBusMainTitle" class="text-sm font-medium text-amber-100">Próximos Buses a salir hoy</h2>
                     <div id="nextBusMainText" class="text-2xl sm:text-3xl font-extrabold text-white mt-1">
                         Buscando próximo horario...
                     </div>
                 </div>
-                <div id="nextBusSubText" class="text-xs sm:text-sm text-amber-100 flex items-center gap-1.5">
-                    <i data-lucide="info" class="w-4 h-4"></i>
-                    <span>Calculando tiempos de espera...</span>
+                <div id="nextBusSubText" class="text-xs sm:text-sm text-amber-100 space-y-1">
+                    <!-- Contenido dinámico para múltiples buses -->
                 </div>
             </div>
         </section>
 
         <!-- Filtros y Controles -->
         <section class="bg-white rounded-3xl p-4 sm:p-5 shadow-sm border border-slate-200/80 space-y-4">
-            
-            <!-- Selector de Día -->
             <div>
                 <div class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
                     <i data-lucide="calendar" class="w-4 h-4 text-teal-600"></i>
@@ -161,7 +136,6 @@
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                <!-- Selector de Ruta -->
                 <div>
                     <label for="routeSelect" class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
                         <i data-lucide="map-pin" class="w-4 h-4 text-teal-600"></i>
@@ -170,6 +144,7 @@
                     <div class="relative">
                         <select id="routeSelect" onchange="renderRoutes()" class="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3 px-4 pr-10 text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-teal-500 appearance-none">
                             <option value="ALL">Todas las Rutas</option>
+                            <option value="CHOLCHOL_IMPERIAL">Cholchol → Nueva Imperial</option>
                             <option value="GALVARINO_CHOLCHOL_TEMUCO">Galvarino → Cholchol → Temuco</option>
                             <option value="CHOLCHOL_TEMUCO">Cholchol → Temuco</option>
                             <option value="TEMUCO_CHOLCHOL">Temuco → Cholchol</option>
@@ -183,7 +158,6 @@
                     </div>
                 </div>
 
-                <!-- Buscador de Hora Específica -->
                 <div>
                     <label for="timeQuery" class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
                         <i data-lucide="search" class="w-4 h-4 text-teal-600"></i>
@@ -213,6 +187,49 @@
             <!-- Renderizado dinámico desde Javascript -->
         </section>
 
+       <!-- SECCIÓN DE RESPALDO: FOTOS OFICIALES DE LOS LETREROS -->
+<section class="bg-white rounded-3xl p-5 sm:p-6 shadow-sm border border-slate-200/80 space-y-4">
+    <div class="flex items-center gap-2 text-slate-800 font-bold text-base border-b border-slate-100 pb-3">
+        <i data-lucide="camera" class="w-5 h-5 text-teal-600"></i>
+        <span>Respaldo Fotográfico Oficial de Horarios</span>
+    </div>
+    <p class="text-xs text-slate-500 leading-relaxed">
+        Para evitar confusiones y respaldar la información ante los pasajeros, los horarios publicados en esta plataforma provienen estrictamente de las fotografías oficiales de las pizarras de los terminales. ¡Haz clic en cualquier imagen para verla en grande!
+    </p>
+
+    <!-- Contenedor grid de 3 columnas para PC y 1 para móvil -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+        
+        <!-- Tarjeta 1: Lunes a Viernes y Domingos -->
+        <div class="bg-slate-900 rounded-2xl p-3 flex flex-col items-center justify-between border border-slate-800 space-y-2">
+            <span class="text-xs font-bold text-teal-300 text-center">📅 L. a V. - Dom. y Festivos</span>
+            <a href="letreo_huinca_bus1.jpeg" target="_blank" class="w-full flex justify-center">
+                <img src="letreo_huinca_bus1.jpeg" alt="Letrero Lunes a Viernes" class="rounded-xl h-52 object-contain hover:opacity-95 transition-opacity cursor-zoom-in">
+            </a>
+            <span class="text-[10px] text-slate-400 text-center">Huincabus / Tránsito Regional</span>
+        </div>
+
+        <!-- Tarjeta 2: Sábados -->
+        <div class="bg-slate-900 rounded-2xl p-3 flex flex-col items-center justify-between border border-slate-800 space-y-2">
+            <span class="text-xs font-bold text-teal-300 text-center">📅 Sábados</span>
+            <a href="letreo_huinca_bus2.jpeg" target="_blank" class="w-full flex justify-center">
+                <img src="letreo_huinca_bus2.jpeg" alt="Letrero Sábados" class="rounded-xl h-52 object-contain hover:opacity-95 transition-opacity cursor-zoom-in">
+            </a>
+            <span class="text-[10px] text-slate-400 text-center">Huincabus / Sábados</span>
+        </div>
+
+        <!-- Tarjeta 3: Cholchol - Nueva Imperial -->
+        <div class="bg-slate-900 rounded-2xl p-3 flex flex-col items-center justify-between border border-slate-800 space-y-2">
+            <span class="text-xs font-bold text-teal-300 text-center">📅 Cholchol - Nva. Imperial</span>
+            <a href="letrero_imperial.jpg" target="_blank" class="w-full flex justify-center">
+                <img src="letrero_imperial.jpg" alt="Letrero Cholchol Imperial" class="rounded-xl h-52 object-contain hover:opacity-95 transition-opacity cursor-zoom-in">
+            </a>
+            <span class="text-[10px] text-slate-400 text-center">Barbosa, Turischol, Nehuenmapu</span>
+        </div>
+
+    </div>
+</section>
+
     </main>
 
     <!-- Footer -->
@@ -221,18 +238,15 @@
             <i data-lucide="bus" class="w-4 h-4 text-teal-400"></i>
             <span class="font-semibold text-slate-200">Horarios Referenciales de Recorrido</span>
         </div>
-        
-        <!-- Marca e Información del Desarrollador -->
         <div class="max-w-xl mx-auto bg-slate-800/80 border border-slate-700/60 rounded-2xl p-3 text-[11px] text-slate-300 space-y-1">
             <p class="font-bold text-teal-400 flex items-center justify-center gap-1">
                 <i data-lucide="code" class="w-3.5 h-3.5"></i>
                 Sistema Desarrollado por Tidreamsoporte
             </p>
             <p class="leading-relaxed">
-                Los horarios pueden estar sujetos a cambios por la empresa de buses.
+                Herramienta creada para facilitar la consulta del transporte público regional.
             </p>
         </div>
-
         <p class="text-slate-500 text-[10px]">Si tienes alguna sugerencia o comentario contactanos por nuestros canales oficiales.</p>
     </footer>
 
@@ -241,41 +255,74 @@
         const SCHEDULES = {
             weekday: [
                 {
+                    id: "CHOLCHOL_IMPERIAL",
+                    name: "Cholchol - Nueva Imperial",
+                    via: "Pizarra Oficial Terminal",
+                    color: "border-purple-500",
+                    badgeColor: "bg-purple-100 text-purple-800",
+                    times: ["07:35", "08:00", "08:40", "09:20", "10:00", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:10", "14:00", "14:30", "15:15", "15:40", "16:20", "17:00", "17:40"],
+                    notes: {
+                        "07:35": "Nehuenmapu",
+                        "08:00": "Barbosa",
+                        "08:40": "Turischol",
+                        "09:20": "Barbosa",
+                        "10:00": "Turischol (L, Mi, V) / Nehuenmapu (M, J)",
+                        "10:30": "Barbosa",
+                        "11:00": "Barbosa",
+                        "11:30": "Turischol",
+                        "12:00": "Nehuenmapu (L, Mi, V)",
+                        "12:30": "Barbosa (L-V por Hualacura)",
+                        "13:00": "Barbosa",
+                        "13:10": "Turischol",
+                        "14:00": "Nehuenmapu (L, Mi, V)",
+                        "14:30": "Turischol",
+                        "15:15": "Barbosa",
+                        "15:40": "Turischol",
+                        "16:20": "Barbosa (L-V por Hualacura)",
+                        "17:00": "Nehuenmapu",
+                        "17:40": "Barbosa"
+                    }
+                },
+                {
                     id: "GALVARINO_CHOLCHOL_TEMUCO",
                     name: "Galvarino - Cholchol - Temuco",
-                    via: "Vía Cholchol",
+                    via: "Huincabus (Vía Cholchol)",
                     color: "border-teal-500",
                     badgeColor: "bg-teal-100 text-teal-800",
-                    times: ["06:10", "07:10", "08:00", "09:00", "10:00", "11:00", "12:30", "14:00", "15:15", "16:30", "17:15", "18:30"]
+                    times: ["06:10", "07:10", "08:00", "09:00", "10:00", "11:00", "12:30", "14:00", "15:15", "16:30", "17:15", "18:30"],
+                    notes: {}
                 },
                 {
                     id: "CHOLCHOL_TEMUCO",
                     name: "Cholchol - Temuco",
-                    via: "Directo",
+                    via: "Huincabus (Directo)",
                     color: "border-emerald-500",
                     badgeColor: "bg-emerald-100 text-emerald-800",
-                    times: ["06:00", "06:15", "06:30", "06:45", "07:00", "07:30", "07:45", "08:00", "08:30", "08:45", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "13:00", "14:00", "14:30", "15:00", "16:00", "17:00", "17:45", "18:15", "19:00"]
+                    times: ["06:00", "06:15", "06:30", "06:45", "07:00", "07:30", "07:45", "08:00", "08:30", "08:45", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "13:00", "14:00", "14:30", "15:00", "16:00", "17:00", "17:45", "18:15", "19:00"],
+                    notes: {}
                 },
                 {
                     id: "TEMUCO_CHOLCHOL",
                     name: "Temuco - Cholchol",
-                    via: "Salida desde Temuco",
+                    via: "Huincabus (Salida desde Temuco)",
                     color: "border-sky-500",
                     badgeColor: "bg-sky-100 text-sky-800",
-                    times: ["06:50", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:15", "16:45", "17:15", "17:45", "18:15", "18:40", "19:00", "19:30", "20:15"]
+                    times: ["06:50", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:15", "16:45", "17:15", "17:45", "18:15", "18:40", "19:00", "19:30", "20:15"],
+                    notes: {}
                 },
                 {
                     id: "TEMUCO_CHOLCHOL_GALVARINO",
                     name: "Temuco - Cholchol - Galvarino",
-                    via: "Salida desde Temuco",
+                    via: "Huincabus (Salida desde Temuco)",
                     color: "border-indigo-500",
                     badgeColor: "bg-indigo-100 text-indigo-800",
-                    times: ["06:50", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "15:00", "15:30", "16:15", "17:15", "17:45", "18:45", "19:00", "20:15"]
+                    times: ["06:50", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "15:00", "15:30", "16:15", "17:15", "17:45", "18:45", "19:00", "20:15"],
+                    notes: {}
                 },
                 {
                     id: "GALVARINO_LAUTARO_TEMUCO",
                     name: "Galvarino - Lautaro - Temuco",
-                    via: "Vía Lautaro",
+                    via: "Huincabus (Vía Lautaro)",
                     color: "border-amber-500",
                     badgeColor: "bg-amber-100 text-amber-800",
                     times: ["06:30", "07:00", "08:30", "12:00", "17:00"],
@@ -284,7 +331,7 @@
                 {
                     id: "TEMUCO_LAUTARO_GALVARINO",
                     name: "Temuco - Lautaro - Galvarino",
-                    via: "Vía Lautaro",
+                    via: "Huincabus (Vía Lautaro)",
                     color: "border-rose-500",
                     badgeColor: "bg-rose-100 text-rose-800",
                     times: ["09:00", "14:15", "17:20", "19:30"],
@@ -294,8 +341,8 @@
             saturday: [
                 {
                     id: "GALVARINO_CHOLCHOL_TEMUCO",
-                    name: "Galvarino - Cholchol x Temuco",
-                    via: "Vía Cholchol",
+                    name: "Galvarino - Temuco x Cholchol",
+                    via: "Huincabus (Vía Cholchol)",
                     color: "border-teal-500",
                     badgeColor: "bg-teal-100 text-teal-800",
                     times: ["08:00", "10:00", "12:30", "14:30", "17:45"]
@@ -303,7 +350,7 @@
                 {
                     id: "CHOLCHOL_TEMUCO",
                     name: "Cholchol - Temuco",
-                    via: "Directo",
+                    via: "Huincabus (Directo)",
                     color: "border-emerald-500",
                     badgeColor: "bg-emerald-100 text-emerald-800",
                     times: ["07:00", "08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:30", "12:30", "13:00", "14:00", "15:00", "17:00", "18:15"]
@@ -311,7 +358,7 @@
                 {
                     id: "TEMUCO_CHOLCHOL",
                     name: "Temuco - Cholchol",
-                    via: "Salida desde Temuco",
+                    via: "Huincabus (Salida desde Temuco)",
                     color: "border-sky-500",
                     badgeColor: "bg-sky-100 text-sky-800",
                     times: ["07:30", "09:30", "10:00", "11:00", "12:00", "12:30", "13:00", "14:00", "14:30", "15:00", "16:15", "17:15", "18:15", "19:30"]
@@ -319,7 +366,7 @@
                 {
                     id: "TEMUCO_CHOLCHOL_GALVARINO",
                     name: "Temuco - Cholchol - Galvarino",
-                    via: "Salida desde Temuco",
+                    via: "Huincabus (Salida desde Temuco)",
                     color: "border-indigo-500",
                     badgeColor: "bg-indigo-100 text-indigo-800",
                     times: ["10:00", "12:00", "13:00", "15:00", "16:15", "17:15", "19:30"]
@@ -327,7 +374,7 @@
                 {
                     id: "GALVARINO_LAUTARO_TEMUCO",
                     name: "Galvarino - Lautaro - Temuco",
-                    via: "Vía Lautaro",
+                    via: "Huincabus (Vía Lautaro)",
                     color: "border-amber-500",
                     badgeColor: "bg-amber-100 text-amber-800",
                     times: ["08:30"]
@@ -335,7 +382,7 @@
                 {
                     id: "TEMUCO_LAUTARO_GALVARINO",
                     name: "Temuco - Lautaro - Galvarino",
-                    via: "Vía Lautaro",
+                    via: "Huincabus (Vía Lautaro)",
                     color: "border-rose-500",
                     badgeColor: "bg-rose-100 text-rose-800",
                     times: ["14:15"]
@@ -344,8 +391,8 @@
             sunday: [
                 {
                     id: "GALVARINO_CHOLCHOL_TEMUCO",
-                    name: "Galvarino - Cholchol x Temuco",
-                    via: "Vía Cholchol",
+                    name: "Galvarino - Temuco x Cholchol",
+                    via: "Huincabus (Vía Cholchol)",
                     color: "border-teal-500",
                     badgeColor: "bg-teal-100 text-teal-800",
                     times: ["08:30", "12:30", "17:45"]
@@ -353,7 +400,7 @@
                 {
                     id: "CHOLCHOL_TEMUCO",
                     name: "Cholchol - Temuco",
-                    via: "Directo",
+                    via: "Huincabus (Directo)",
                     color: "border-emerald-500",
                     badgeColor: "bg-emerald-100 text-emerald-800",
                     times: ["08:00", "09:00", "13:00", "17:00", "18:15"]
@@ -361,7 +408,7 @@
                 {
                     id: "TEMUCO_CHOLCHOL",
                     name: "Temuco - Cholchol",
-                    via: "Salida desde Temuco",
+                    via: "Huincabus (Salida desde Temuco)",
                     color: "border-sky-500",
                     badgeColor: "bg-sky-100 text-sky-800",
                     times: ["10:00", "13:00", "15:00", "18:15", "19:30"]
@@ -369,7 +416,7 @@
                 {
                     id: "TEMUCO_CHOLCHOL_GALVARINO",
                     name: "Temuco - Cholchol - Galvarino",
-                    via: "Salida desde Temuco",
+                    via: "Huincabus (Salida desde Temuco)",
                     color: "border-indigo-500",
                     badgeColor: "bg-indigo-100 text-indigo-800",
                     times: ["10:00", "13:00", "19:30"]
@@ -466,14 +513,16 @@
                 mainTitle.innerText = `Consultando horario diferente al día de hoy`;
                 mainText.innerHTML = `<span class="text-xl sm:text-2xl font-bold">${DAY_NAMES[currentDayFilter]}</span>`;
                 subText.innerHTML = `
-                    <i data-lucide="calendar-clock" class="w-4 h-4 text-amber-200"></i>
-                    <span>Viendo tabla de un día distinto. Los cálculos en tiempo real están desactivados.</span>
+                    <div class="flex items-center gap-1.5 text-amber-100">
+                        <i data-lucide="calendar-clock" class="w-4 h-4"></i>
+                        <span>Viendo tabla de un día distinto. Los cálculos en tiempo real están desactivados.</span>
+                    </div>
                 `;
                 lucide.createIcons();
                 return;
             }
 
-            mainTitle.innerText = "Próximo Bus a salir hoy";
+            mainTitle.innerText = "Próximo(s) Bus(es) a salir hoy";
 
             const now = new Date();
             const currentMins = now.getHours() * 60 + now.getMinutes();
@@ -485,38 +534,51 @@
                 route.times.forEach(t => {
                     const busMins = timeToMinutes(t);
                     if (busMins >= currentMins) {
+                        let noteText = route.notes && route.notes[t] ? route.notes[t] : route.via;
                         upcomingBuses.push({
                             time: t,
                             mins: busMins,
                             diff: busMins - currentMins,
                             route: route.name,
-                            via: route.via
+                            details: noteText
                         });
                     }
                 });
             });
 
             if (upcomingBuses.length > 0) {
+                // Ordenar por menor diferencia de tiempo
                 upcomingBuses.sort((a, b) => a.diff - b.diff);
-                const next = upcomingBuses[0];
+                const nextDiff = upcomingBuses[0].diff;
+                const nextTime = upcomingBuses[0].time;
+
+                // Filtrar TODOS los buses que salgan exactamente en ese mismo minuto
+                const simultaneousBuses = upcomingBuses.filter(b => b.time === nextTime);
 
                 mainText.innerHTML = `
                     <div class="flex flex-wrap items-baseline gap-2">
-                        <span class="text-3xl sm:text-4xl font-extrabold tracking-tight">${next.time} hrs</span>
+                        <span class="text-3xl sm:text-4xl font-extrabold tracking-tight">${nextTime} hrs</span>
                         <span class="text-sm font-semibold bg-black/30 px-2.5 py-1 rounded-xl text-yellow-300">
-                            ${formatMinutesDiff(next.diff)}
+                            ${formatMinutesDiff(nextDiff)}
                         </span>
                     </div>
                 `;
-                subText.innerHTML = `
-                    <i data-lucide="bus" class="w-4 h-4 text-white"></i>
-                    <strong class="text-white">${next.route}</strong> <span class="opacity-80">(${next.via})</span>
-                `;
+
+                subText.innerHTML = simultaneousBuses.map(bus => `
+                    <div class="flex items-center gap-1.5 bg-black/20 px-3 py-1.5 rounded-xl border border-white/10">
+                        <i data-lucide="bus" class="w-4 h-4 text-yellow-300 flex-shrink-0"></i>
+                        <span class="font-bold text-white">${bus.route}</span>
+                        <span class="text-amber-200 opacity-90 text-[11px]">(${bus.details})</span>
+                    </div>
+                `).join('');
+
             } else {
                 mainText.innerText = "No quedan más salidas hoy";
                 subText.innerHTML = `
-                    <i data-lucide="moon" class="w-4 h-4"></i>
-                    <span>Los recorridos finalizados por el día de hoy para esta jornada.</span>
+                    <div class="flex items-center gap-1.5 text-amber-100">
+                        <i data-lucide="moon" class="w-4 h-4"></i>
+                        <span>Los recorridos han finalizado por el día de hoy en esta jornada.</span>
+                    </div>
                 `;
             }
             lucide.createIcons();
@@ -631,7 +693,7 @@
                                                 <span>${time}</span>
                                                 <i data-lucide="bell" class="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity"></i>
                                             </div>
-                                            ${note ? `<div class="text-[9px] truncate opacity-90 font-normal leading-tight mt-0.5" title="${note}">${note}</div>` : ''}
+                                            ${note ? `<div class="text-[9px] truncate opacity-90 font-normal leading-tight mt-0.5 text-teal-900 font-semibold" title="${note}">${note}</div>` : ''}
                                         </button>
                                     `;
                                 }).join('')}
@@ -750,9 +812,9 @@ END:VCALENDAR`;
                     const diff = busMins - targetMins;
 
                     if (diff === 0) {
-                        matchExact.push({ route: route.name, time: t, via: route.via });
+                        matchExact.push({ route: route.name, time: t, via: route.via, note: route.notes ? route.notes[t] : null });
                     } else if (diff > 0 && diff <= 30) {
-                        matchClose.push({ route: route.name, time: t, via: route.via, diff: diff });
+                        matchClose.push({ route: route.name, time: t, via: route.via, diff: diff, note: route.notes ? route.notes[t] : null });
                     }
                 });
             });
@@ -770,7 +832,7 @@ END:VCALENDAR`;
                     </div>
                     <ul class="space-y-1.5 pl-8 list-disc">
                         ${matchExact.map(m => `
-                            <li><strong class="text-emerald-950">${m.route}</strong> (${m.via})</li>
+                            <li><strong class="text-emerald-950">${m.route}</strong> ${m.note ? `(${m.note})` : ''}</li>
                         `).join('')}
                     </ul>
                 `;
@@ -785,7 +847,7 @@ END:VCALENDAR`;
                         ${matchClose.map(m => `
                             <li>
                                 Salida a las <strong class="text-sky-950 text-base">${m.time} hrs</strong> (+${m.diff} min) - 
-                                <span>${m.route} (${m.via})</span>
+                                <span>${m.route} ${m.note ? `(${m.note})` : ''}</span>
                             </li>
                         `).join('')}
                     </ul>
