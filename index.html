@@ -382,9 +382,7 @@ document.addEventListener('click',e=>{
 $('reset').onclick=()=>{org=dst=dirF='ALL';view=real;open.clear();$('qres').hidden=true;render()};
 document.onkeydown=e=>{if(e.key==='Escape')$('rm').hidden=true};
 
-try{if(Date.now()-(+localStorage.getItem('avisoOk')||0)<2592e6)$('welcome').hidden=true}catch(e){}
-$('ok').onclick=()=>{$('welcome').hidden=true;try{localStorage.setItem('avisoOk',Date.now())}catch(e){}openPicker()};
-if($('welcome').hidden)openPicker();
+$('ok').onclick=()=>{$('welcome').hidden=true;openPicker()};
 
 function nextDate(type,x){const p=x.split(':');for(let k=0;k<15;k++){const d=new Date();d.setDate(d.getDate()+k);d.setHours(+p[0],+p[1],0,0);if(dayType(d)===type&&d>new Date())return d}return new Date()}
 function openRem(id,x){const r=R.find(z=>z.id===id),d=nextDate(view,x);rem={name:r.st.join(' ➔ '),co:r.co,x:x,d:d};
