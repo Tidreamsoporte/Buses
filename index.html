@@ -74,12 +74,12 @@
 
     <!-- Navbar / Banner Superior -->
     <header class="banner-bg text-white shadow-xl sticky top-0 z-50 border-b border-teal-600/30">
-        <div class="max-w-4xl mx-auto px-4 py-5 sm:py-6 sm:px-6">
+        <div class="max-w-4xl mx-auto px-4 py-4 sm:py-5 sm:px-6">
             <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div class="flex items-center justify-center sm:justify-start">
                     <img src="busintercomunal.png" alt="Buses Interurbanos" class="h-20 sm:h-24 md:h-28 w-auto object-contain filter drop-shadow-lg">
                 </div>
-                <div class="text-center sm:text-right bg-black/20 px-4 py-2.5 rounded-2xl border border-white/15 backdrop-blur-sm shadow-sm w-full sm:w-auto">
+                <div class="text-center sm:text-right bg-black/20 px-4 py-2 rounded-2xl border border-white/15 backdrop-blur-sm shadow-sm w-full sm:w-auto">
                     <div class="text-[10px] text-teal-200 uppercase font-bold tracking-widest">Hora Actual</div>
                     <div id="liveClock" class="text-base sm:text-lg font-extrabold text-yellow-300 tracking-wider">--:--:-- hrs</div>
                 </div>
@@ -90,18 +90,29 @@
     <!-- Main Content Container -->
     <main class="max-w-4xl mx-auto px-4 py-6 sm:px-6 w-full flex-grow space-y-6">
 
-        <!-- Banner de Próxima SALIDA Destacada (Múltiples Buses simultáneos) -->
+        <!-- 🕒 Mensaje de Anticipación -->
+        <section class="bg-amber-50 border-2 border-amber-300 rounded-3xl p-4 text-amber-900 shadow-sm flex items-center gap-3">
+            <div class="w-10 h-10 bg-amber-200 text-amber-800 rounded-2xl flex items-center justify-center flex-shrink-0">
+                <i data-lucide="clock" class="w-5 h-5"></i>
+            </div>
+            <div class="text-xs sm:text-sm">
+                <span class="font-bold block text-amber-950 mb-0.5"> Llega con anticipación</span>
+                Considera unos minutos extra: si el bus dice una hora, puede salir justo a tiempo, un poco antes o un poco después según el tráfico.
+            </div>
+        </section>
+
+        <!-- Banner de Próxima SALIDA Destacada -->
         <section class="bg-gradient-to-r from-amber-500 to-orange-500 rounded-3xl p-5 text-white shadow-md relative overflow-hidden">
             <div class="absolute -right-6 -bottom-6 opacity-15">
                 <i data-lucide="clock" class="w-40 h-40"></i>
             </div>
             <div class="relative z-10 space-y-3">
-                <div class="flex items-center justify-between">
+                <div class="flex items-center justify-between flex-wrap gap-2">
                     <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-white/20 backdrop-blur-md">
                         <i data-lucide="sparkles" class="w-3.5 h-3.5 text-yellow-200"></i>
                         Detección Automática
                     </span>
-                    <span id="detectedDayBadge" class="text-xs font-medium bg-black/20 px-2.5 py-1 rounded-lg"></span>
+                    <span id="detectedDayBadge" class="text-xs font-bold bg-black/20 px-3 py-1 rounded-xl"></span>
                 </div>
                 <div>
                     <h2 id="nextBusMainTitle" class="text-sm font-medium text-amber-100">Próximos Buses a salir hoy</h2>
@@ -109,126 +120,150 @@
                         Buscando próximo horario...
                     </div>
                 </div>
-                <div id="nextBusSubText" class="text-xs sm:text-sm text-amber-100 space-y-1">
-                    <!-- Contenido dinámico para múltiples buses -->
-                </div>
+                <div id="nextBusSubText" class="text-xs sm:text-sm text-amber-100 space-y-1"></div>
             </div>
         </section>
 
-        <!-- Filtros y Controles -->
-        <section class="bg-white rounded-3xl p-4 sm:p-5 shadow-sm border border-slate-200/80 space-y-4">
+        <!-- Filtros Interactivos de 3 Pasos -->
+        <section class="bg-white rounded-3xl p-5 sm:p-6 shadow-sm border border-slate-200/80 space-y-5">
+            
+            <!-- Cabecera con Botón General para Limpiar Filtros -->
+            <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-100">
+                <div class="text-xs font-extrabold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
+                    <i data-lucide="sliders" class="w-4 h-4 text-teal-700"></i>
+                    <span>Panel de Búsqueda y Filtros</span>
+                </div>
+                <button onclick="resetAllFilters()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold px-3.5 py-2 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer border border-slate-200 shadow-sm">
+                    <i data-lucide="rotate-ccw" class="w-3.5 h-3.5 text-teal-700"></i>
+                    <span>Restablecer todos los filtros</span>
+                </button>
+            </div>
+
+            <!-- PASO 1: ¿Desde dónde sales? -->
             <div>
-                <div class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                    <i data-lucide="calendar" class="w-4 h-4 text-teal-600"></i>
-                    <span>Selecciona Tipo de Día</span>
+                <div class="flex items-center justify-between mb-2">
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                        <span class="w-5 h-5 rounded-full bg-teal-700 text-white flex items-center justify-center text-xs font-bold">1</span>
+                        <span>¿Desde dónde sales?</span>
+                    </label>
+                    <button onclick="setOrigin('ALL')" class="text-xs text-teal-700 hover:text-teal-900 font-semibold flex items-center gap-1 cursor-pointer bg-teal-50 px-2.5 py-1 rounded-xl border border-teal-200">
+                        <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                        <span>Quitar filtro</span>
+                    </button>
                 </div>
-                <div class="grid grid-cols-3 gap-2">
-                    <button id="btn-weekday" onclick="setDayFilter('weekday')" class="day-btn py-2.5 px-2 rounded-2xl text-xs sm:text-sm font-semibold transition-all border border-slate-200 hover:bg-slate-50 flex flex-col sm:flex-row items-center justify-center gap-1 cursor-pointer">
-                        <span>Lunes a Viernes</span>
+                <div id="originButtons" class="grid grid-cols-2 sm:grid-cols-4 gap-2"></div>
+            </div>
+
+            <!-- PASO 2: ¿A dónde vas? -->
+            <div class="pt-2 border-t border-slate-100">
+                <div class="flex items-center justify-between mb-2">
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                        <span class="w-5 h-5 rounded-full bg-teal-700 text-white flex items-center justify-center text-xs font-bold">2</span>
+                        <span>¿A dónde vas?</span>
+                    </label>
+                    <button onclick="setDestination('ALL')" class="text-xs text-teal-700 hover:text-teal-900 font-semibold flex items-center gap-1 cursor-pointer bg-teal-50 px-2.5 py-1 rounded-xl border border-teal-200">
+                        <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                        <span>Quitar filtro</span>
                     </button>
-                    <button id="btn-saturday" onclick="setDayFilter('saturday')" class="day-btn py-2.5 px-2 rounded-2xl text-xs sm:text-sm font-semibold transition-all border border-slate-200 hover:bg-slate-50 flex flex-col sm:flex-row items-center justify-center gap-1 cursor-pointer">
-                        <span>Sábados</span>
+                </div>
+                <div id="destButtons" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2"></div>
+            </div>
+
+            <!-- PASO 3: ¿Qué día viajas? -->
+            <div class="pt-2 border-t border-slate-100">
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <span class="w-5 h-5 rounded-full bg-teal-700 text-white flex items-center justify-center text-xs font-bold">3</span>
+                    <span>¿Qué día viajas?</span>
+                </label>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                    <button id="btn-weekday" onclick="setDayFilter('weekday')" class="day-btn py-3 px-4 rounded-2xl text-xs sm:text-sm font-semibold transition-all border border-slate-200 flex items-center justify-between sm:justify-center gap-2 cursor-pointer">
+                        <span class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full border-2 border-slate-400 flex items-center justify-center indicator-dot flex-shrink-0"></span>
+                            <span class="whitespace-nowrap">Lunes a Viernes</span>
+                        </span>
+                        <span id="badge-weekday-tag" class="hidden text-[10px] bg-teal-800 text-white px-2 py-0.5 rounded-full font-bold">Hoy</span>
                     </button>
-                    <button id="btn-sunday" onclick="setDayFilter('sunday')" class="day-btn py-2.5 px-2 rounded-2xl text-xs sm:text-sm font-semibold transition-all border border-slate-200 hover:bg-slate-50 flex flex-col sm:flex-row items-center justify-center gap-1 cursor-pointer">
-                        <span>Dom. y Festivos</span>
+                    <button id="btn-saturday" onclick="setDayFilter('saturday')" class="day-btn py-3 px-4 rounded-2xl text-xs sm:text-sm font-semibold transition-all border border-slate-200 flex items-center justify-between sm:justify-center gap-2 cursor-pointer">
+                        <span class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full border-2 border-slate-400 flex items-center justify-center indicator-dot flex-shrink-0"></span>
+                            <span class="whitespace-nowrap">Sábados</span>
+                        </span>
+                        <span id="badge-saturday-tag" class="hidden text-[10px] bg-teal-800 text-white px-2 py-0.5 rounded-full font-bold">Hoy</span>
+                    </button>
+                    <button id="btn-sunday" onclick="setDayFilter('sunday')" class="day-btn py-3 px-4 rounded-2xl text-xs sm:text-sm font-semibold transition-all border border-slate-200 flex items-center justify-between sm:justify-center gap-2 cursor-pointer">
+                        <span class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full border-2 border-slate-400 flex items-center justify-center indicator-dot flex-shrink-0"></span>
+                            <span class="whitespace-nowrap">Domingos y Festivos</span>
+                        </span>
+                        <span id="badge-sunday-tag" class="hidden text-[10px] bg-teal-800 text-white px-2 py-0.5 rounded-full font-bold">Hoy</span>
                     </button>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                <div>
-                    <label for="routeSelect" class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                        <i data-lucide="map-pin" class="w-4 h-4 text-teal-600"></i>
-                        <span>Filtrar por Ruta</span>
-                    </label>
-                    <div class="relative">
-                        <select id="routeSelect" onchange="renderRoutes()" class="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3 px-4 pr-10 text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-teal-500 appearance-none">
-                            <option value="ALL">Todas las Rutas</option>
-                            <option value="CHOLCHOL_IMPERIAL">Cholchol → Nueva Imperial</option>
-                            <option value="GALVARINO_CHOLCHOL_TEMUCO">Galvarino → Cholchol → Temuco</option>
-                            <option value="CHOLCHOL_TEMUCO">Cholchol → Temuco</option>
-                            <option value="TEMUCO_CHOLCHOL">Temuco → Cholchol</option>
-                            <option value="TEMUCO_CHOLCHOL_GALVARINO">Temuco → Cholchol → Galvarino</option>
-                            <option value="GALVARINO_LAUTARO_TEMUCO">Galvarino → Lautaro → Temuco</option>
-                            <option value="TEMUCO_LAUTARO_GALVARINO">Temuco → Lautaro → Galvarino</option>
-                        </select>
-                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500">
-                            <i data-lucide="chevron-down" class="w-4 h-4"></i>
-                        </div>
+            <!-- Consulta rápida por hora adicional -->
+            <div class="pt-2 border-t border-slate-100">
+                <label for="timeQuery" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <i data-lucide="search" class="w-4 h-4 text-teal-600"></i>
+                    <span>¿Pasa bus a esta hora específica?</span>
+                </label>
+                <div class="flex gap-2">
+                    <div class="relative flex-grow">
+                        <input type="time" id="timeQuery" class="w-full bg-slate-50 border border-slate-200 rounded-2xl py-2.5 px-4 text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-teal-500">
                     </div>
-                </div>
-
-                <div>
-                    <label for="timeQuery" class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                        <i data-lucide="search" class="w-4 h-4 text-teal-600"></i>
-                        <span>¿Pasa bus a esta hora?</span>
-                    </label>
-                    <div class="flex gap-2">
-                        <div class="relative flex-grow">
-                            <input type="time" id="timeQuery" class="w-full bg-slate-50 border border-slate-200 rounded-2xl py-2.5 px-4 text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-teal-500">
-                        </div>
-                        <button onclick="checkBusAtTime()" class="bg-teal-700 hover:bg-teal-800 text-white px-4 py-2.5 rounded-2xl text-sm font-semibold flex items-center gap-1.5 transition-colors shadow-sm cursor-pointer">
-                            <i data-lucide="search" class="w-4 h-4"></i>
-                            <span>Consultar</span>
-                        </button>
-                        <button onclick="resetTimeQuery()" title="Usar Hora Actual" class="bg-slate-100 hover:bg-slate-200 text-slate-600 p-2.5 rounded-2xl transition-colors cursor-pointer">
-                            <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
-                        </button>
-                    </div>
+                    <button onclick="checkBusAtTime()" class="bg-teal-700 hover:bg-teal-800 text-white px-4 py-2.5 rounded-2xl text-sm font-semibold flex items-center gap-1.5 transition-colors shadow-sm cursor-pointer">
+                        <i data-lucide="search" class="w-4 h-4"></i>
+                        <span>Consultar</span>
+                    </button>
+                    <button onclick="resetTimeQuery()" title="Usar Hora Actual" class="bg-slate-100 hover:bg-slate-200 text-slate-600 p-2.5 rounded-2xl transition-colors cursor-pointer">
+                        <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                    </button>
                 </div>
             </div>
+
         </section>
 
         <!-- Mensaje de Búsqueda por Hora -->
         <div id="searchResultBox" class="hidden"></div>
 
         <!-- Lista de Tarjetas de Rutas -->
-        <section id="routesContainer" class="space-y-4">
-            <!-- Renderizado dinámico desde Javascript -->
+        <section id="routesContainer" class="space-y-4"></section>
+
+        <!-- SECCIÓN DE RESPALDO: FOTOS OFICIALES DE LOS LETREROS -->
+        <section class="bg-white rounded-3xl p-5 sm:p-6 shadow-sm border border-slate-200/80 space-y-4">
+            <div class="flex items-center gap-2 text-slate-800 font-bold text-base border-b border-slate-100 pb-3">
+                <i data-lucide="camera" class="w-5 h-5 text-teal-600"></i>
+                <span>Respaldo Fotográfico Oficial de Horarios</span>
+            </div>
+            <p class="text-xs text-slate-500 leading-relaxed">
+                Para evitar confusiones y respaldar la información, los horarios provienen estrictamente de las fotografías oficiales de las pizarras de los terminales. ¡Haz clic en cualquier imagen para verla en grande!
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+                <div class="bg-slate-900 rounded-2xl p-3 flex flex-col items-center justify-between border border-slate-800 space-y-2">
+                    <span class="text-xs font-bold text-teal-300 text-center">📅 Lunes a Viernes - Domingos y Festivos</span>
+                    <a href="letreo_huinca_bus1.jpeg" target="_blank" class="w-full flex justify-center">
+                        <img src="letreo_huinca_bus1.jpeg" alt="Letrero Lunes a Viernes" class="rounded-xl h-52 object-contain hover:opacity-95 transition-opacity cursor-zoom-in">
+                    </a>
+                    <span class="text-[10px] text-slate-400 text-center">Huincabus / Tránsito Regional</span>
+                </div>
+
+                <div class="bg-slate-900 rounded-2xl p-3 flex flex-col items-center justify-between border border-slate-800 space-y-2">
+                    <span class="text-xs font-bold text-teal-300 text-center">📅 Sábados</span>
+                    <a href="letreo_huinca_bus2.jpeg" target="_blank" class="w-full flex justify-center">
+                        <img src="letreo_huinca_bus2.jpeg" alt="Letrero Sábados" class="rounded-xl h-52 object-contain hover:opacity-95 transition-opacity cursor-zoom-in">
+                    </a>
+                    <span class="text-[10px] text-slate-400 text-center">Huincabus / Sábados</span>
+                </div>
+
+                <div class="bg-slate-900 rounded-2xl p-3 flex flex-col items-center justify-between border border-slate-800 space-y-2">
+                    <span class="text-xs font-bold text-teal-300 text-center">📅 Cholchol - Nva. Imperial</span>
+                    <a href="letrero_imperial.jpg" target="_blank" class="w-full flex justify-center">
+                        <img src="letrero_imperial.jpg" alt="Letrero Cholchol Imperial" class="rounded-xl h-52 object-contain hover:opacity-95 transition-opacity cursor-zoom-in">
+                    </a>
+                    <span class="text-[10px] text-slate-400 text-center">Barbosa, Turischol, Nehuenmapu</span>
+                </div>
+            </div>
         </section>
-
-       <!-- SECCIÓN DE RESPALDO: FOTOS OFICIALES DE LOS LETREROS -->
-<section class="bg-white rounded-3xl p-5 sm:p-6 shadow-sm border border-slate-200/80 space-y-4">
-    <div class="flex items-center gap-2 text-slate-800 font-bold text-base border-b border-slate-100 pb-3">
-        <i data-lucide="camera" class="w-5 h-5 text-teal-600"></i>
-        <span>Respaldo Fotográfico Oficial de Horarios</span>
-    </div>
-    <p class="text-xs text-slate-500 leading-relaxed">
-        Para evitar confusiones y respaldar la información ante los pasajeros, los horarios publicados en esta plataforma provienen estrictamente de las fotografías oficiales de las pizarras de los terminales. ¡Haz clic en cualquier imagen para verla en grande!
-    </p>
-
-    <!-- Contenedor grid de 3 columnas para PC y 1 para móvil -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
-        
-        <!-- Tarjeta 1: Lunes a Viernes y Domingos -->
-        <div class="bg-slate-900 rounded-2xl p-3 flex flex-col items-center justify-between border border-slate-800 space-y-2">
-            <span class="text-xs font-bold text-teal-300 text-center">📅 L. a V. - Dom. y Festivos</span>
-            <a href="letreo_huinca_bus1.jpeg" target="_blank" class="w-full flex justify-center">
-                <img src="letreo_huinca_bus1.jpeg" alt="Letrero Lunes a Viernes" class="rounded-xl h-52 object-contain hover:opacity-95 transition-opacity cursor-zoom-in">
-            </a>
-            <span class="text-[10px] text-slate-400 text-center">Huincabus / Tránsito Regional</span>
-        </div>
-
-        <!-- Tarjeta 2: Sábados -->
-        <div class="bg-slate-900 rounded-2xl p-3 flex flex-col items-center justify-between border border-slate-800 space-y-2">
-            <span class="text-xs font-bold text-teal-300 text-center">📅 Sábados</span>
-            <a href="letreo_huinca_bus2.jpeg" target="_blank" class="w-full flex justify-center">
-                <img src="letreo_huinca_bus2.jpeg" alt="Letrero Sábados" class="rounded-xl h-52 object-contain hover:opacity-95 transition-opacity cursor-zoom-in">
-            </a>
-            <span class="text-[10px] text-slate-400 text-center">Huincabus / Sábados</span>
-        </div>
-
-        <!-- Tarjeta 3: Cholchol - Nueva Imperial -->
-        <div class="bg-slate-900 rounded-2xl p-3 flex flex-col items-center justify-between border border-slate-800 space-y-2">
-            <span class="text-xs font-bold text-teal-300 text-center">📅 Cholchol - Nva. Imperial</span>
-            <a href="letrero_imperial.jpg" target="_blank" class="w-full flex justify-center">
-                <img src="letrero_imperial.jpg" alt="Letrero Cholchol Imperial" class="rounded-xl h-52 object-contain hover:opacity-95 transition-opacity cursor-zoom-in">
-            </a>
-            <span class="text-[10px] text-slate-400 text-center">Barbosa, Turischol, Nehuenmapu</span>
-        </div>
-
-    </div>
-</section>
 
     </main>
 
@@ -244,7 +279,7 @@
                 Sistema Desarrollado por Tidreamsoporte
             </p>
             <p class="leading-relaxed">
-                Herramienta creada para facilitar la consulta del transporte público regional.
+                Herramienta creada para facilitar la consulta del transporte público regional. 🕒 Recuerda llegar con anticipación al paradero o terminal.
             </p>
         </div>
         <p class="text-slate-500 text-[10px]">Si tienes alguna sugerencia o comentario contactanos por nuestros canales oficiales.</p>
@@ -255,45 +290,9 @@
         const SCHEDULES = {
             weekday: [
                 {
-                    id: "CHOLCHOL_IMPERIAL",
-                    name: "Cholchol - Nueva Imperial",
-                    via: "Pizarra Oficial Terminal",
-                    color: "border-purple-500",
-                    badgeColor: "bg-purple-100 text-purple-800",
-                    times: ["07:35", "08:00", "08:40", "09:20", "10:00", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:10", "14:00", "14:30", "15:15", "15:40", "16:20", "17:00", "17:40"],
-                    notes: {
-                        "07:35": "Nehuenmapu",
-                        "08:00": "Barbosa",
-                        "08:40": "Turischol",
-                        "09:20": "Barbosa",
-                        "10:00": "Turischol (L, Mi, V) / Nehuenmapu (M, J)",
-                        "10:30": "Barbosa",
-                        "11:00": "Barbosa",
-                        "11:30": "Turischol",
-                        "12:00": "Nehuenmapu (L, Mi, V)",
-                        "12:30": "Barbosa (L-V por Hualacura)",
-                        "13:00": "Barbosa",
-                        "13:10": "Turischol",
-                        "14:00": "Nehuenmapu (L, Mi, V)",
-                        "14:30": "Turischol",
-                        "15:15": "Barbosa",
-                        "15:40": "Turischol",
-                        "16:20": "Barbosa (L-V por Hualacura)",
-                        "17:00": "Nehuenmapu",
-                        "17:40": "Barbosa"
-                    }
-                },
-                {
-                    id: "GALVARINO_CHOLCHOL_TEMUCO",
-                    name: "Galvarino - Cholchol - Temuco",
-                    via: "Huincabus (Vía Cholchol)",
-                    color: "border-teal-500",
-                    badgeColor: "bg-teal-100 text-teal-800",
-                    times: ["06:10", "07:10", "08:00", "09:00", "10:00", "11:00", "12:30", "14:00", "15:15", "16:30", "17:15", "18:30"],
-                    notes: {}
-                },
-                {
                     id: "CHOLCHOL_TEMUCO",
+                    origin: "Cholchol",
+                    destination: "Temuco",
                     name: "Cholchol - Temuco",
                     via: "Huincabus (Directo)",
                     color: "border-emerald-500",
@@ -302,9 +301,40 @@
                     notes: {}
                 },
                 {
+                    id: "CHOLCHOL_IMPERIAL",
+                    origin: "Cholchol",
+                    destination: "Nueva Imperial",
+                    name: "Cholchol - Nueva Imperial",
+                    via: "Terminal Cholchol",
+                    color: "border-purple-500",
+                    badgeColor: "bg-purple-100 text-purple-800",
+                    times: ["07:35", "08:00", "08:40", "09:20", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:10", "14:00", "14:30", "15:15", "15:40", "16:20", "17:00", "17:40"],
+                    notes: {
+                        "07:35": "Nehuenmapu", "08:00": "Barbosa", "08:40": "Turischol", "09:20": "Barbosa",
+                        "10:00": "Turischol (L, Mi, V) / Nehuenmapu (M, J)", "10:30": "Barbosa", "11:00": "Barbosa",
+                        "11:30": "Turischol", "12:00": "Nehuenmapu (L, Mi, V)", "12:30": "Barbosa (L-V por Hualacura)",
+                        "13:00": "Barbosa", "13:10": "Turischol", "14:00": "Nehuenmapu (L, Mi, V)", "14:30": "Turischol",
+                        "15:15": "Barbosa", "15:40": "Turischol", "16:20": "Barbosa (L-V por Hualacura)",
+                        "17:00": "Nehuenmapu", "17:40": "Barbosa"
+                    }
+                },
+                {
+                    id: "GALVARINO_CHOLCHOL_TEMUCO",
+                    origin: "Galvarino",
+                    destination: "Temuco",
+                    name: "Galvarino - Cholchol - Temuco",
+                    via: "Huincabus (Vía Cholchol)",
+                    color: "border-teal-500",
+                    badgeColor: "bg-teal-100 text-teal-800",
+                    times: ["06:10", "07:10", "08:00", "09:00", "10:00", "11:00", "12:30", "14:00", "15:15", "16:30", "17:15", "18:30"],
+                    notes: {}
+                },
+                {
                     id: "TEMUCO_CHOLCHOL",
+                    origin: "Temuco",
+                    destination: "Cholchol",
                     name: "Temuco - Cholchol",
-                    via: "Huincabus (Salida desde Temuco)",
+                    via: "Huincabus",
                     color: "border-sky-500",
                     badgeColor: "bg-sky-100 text-sky-800",
                     times: ["06:50", "07:30", "08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:15", "16:45", "17:15", "17:45", "18:15", "18:40", "19:00", "19:30", "20:15"],
@@ -312,8 +342,10 @@
                 },
                 {
                     id: "TEMUCO_CHOLCHOL_GALVARINO",
+                    origin: "Temuco",
+                    destination: "Galvarino",
                     name: "Temuco - Cholchol - Galvarino",
-                    via: "Huincabus (Salida desde Temuco)",
+                    via: "Huincabus (Pasa por Cholchol)",
                     color: "border-indigo-500",
                     badgeColor: "bg-indigo-100 text-indigo-800",
                     times: ["06:50", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "15:00", "15:30", "16:15", "17:15", "17:45", "18:45", "19:00", "20:15"],
@@ -321,6 +353,8 @@
                 },
                 {
                     id: "GALVARINO_LAUTARO_TEMUCO",
+                    origin: "Galvarino",
+                    destination: "Temuco",
                     name: "Galvarino - Lautaro - Temuco",
                     via: "Huincabus (Vía Lautaro)",
                     color: "border-amber-500",
@@ -330,6 +364,8 @@
                 },
                 {
                     id: "TEMUCO_LAUTARO_GALVARINO",
+                    origin: "Temuco",
+                    destination: "Galvarino",
                     name: "Temuco - Lautaro - Galvarino",
                     via: "Huincabus (Vía Lautaro)",
                     color: "border-rose-500",
@@ -340,93 +376,176 @@
             ],
             saturday: [
                 {
-                    id: "GALVARINO_CHOLCHOL_TEMUCO",
-                    name: "Galvarino - Temuco x Cholchol",
-                    via: "Huincabus (Vía Cholchol)",
-                    color: "border-teal-500",
-                    badgeColor: "bg-teal-100 text-teal-800",
-                    times: ["08:00", "10:00", "12:30", "14:30", "17:45"]
-                },
-                {
                     id: "CHOLCHOL_TEMUCO",
+                    origin: "Cholchol",
+                    destination: "Temuco",
                     name: "Cholchol - Temuco",
                     via: "Huincabus (Directo)",
                     color: "border-emerald-500",
                     badgeColor: "bg-emerald-100 text-emerald-800",
-                    times: ["07:00", "08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:30", "12:30", "13:00", "14:00", "15:00", "17:00", "18:15"]
+                    times: ["07:00", "08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:30", "12:30", "13:00", "14:00", "15:00", "17:00", "18:15"],
+                    notes: {}
+                },
+                {
+                    id: "CHOLCHOL_IMPERIAL",
+                    origin: "Cholchol",
+                    destination: "Nueva Imperial",
+                    name: "Cholchol - Nueva Imperial",
+                    via: "Terminal Cholchol",
+                    color: "border-purple-500",
+                    badgeColor: "bg-purple-100 text-purple-800",
+                    times: ["08:00", "09:20", "10:30", "11:30", "13:00", "14:30", "16:20", "17:40"],
+                    notes: {}
+                },
+                {
+                    id: "GALVARINO_CHOLCHOL_TEMUCO",
+                    origin: "Galvarino",
+                    destination: "Temuco",
+                    name: "Galvarino - Temuco x Cholchol",
+                    via: "Huincabus (Vía Cholchol)",
+                    color: "border-teal-500",
+                    badgeColor: "bg-teal-100 text-teal-800",
+                    times: ["08:00", "10:00", "12:30", "14:30", "17:45"],
+                    notes: {}
                 },
                 {
                     id: "TEMUCO_CHOLCHOL",
+                    origin: "Temuco",
+                    destination: "Cholchol",
                     name: "Temuco - Cholchol",
-                    via: "Huincabus (Salida desde Temuco)",
+                    via: "Huincabus",
                     color: "border-sky-500",
                     badgeColor: "bg-sky-100 text-sky-800",
-                    times: ["07:30", "09:30", "10:00", "11:00", "12:00", "12:30", "13:00", "14:00", "14:30", "15:00", "16:15", "17:15", "18:15", "19:30"]
+                    times: ["07:30", "09:30", "10:00", "11:00", "12:00", "12:30", "13:00", "14:00", "14:30", "15:00", "16:15", "17:15", "18:15", "19:30"],
+                    notes: {}
                 },
                 {
                     id: "TEMUCO_CHOLCHOL_GALVARINO",
+                    origin: "Temuco",
+                    destination: "Galvarino",
                     name: "Temuco - Cholchol - Galvarino",
-                    via: "Huincabus (Salida desde Temuco)",
+                    via: "Huincabus (Pasa por Cholchol)",
                     color: "border-indigo-500",
                     badgeColor: "bg-indigo-100 text-indigo-800",
-                    times: ["10:00", "12:00", "13:00", "15:00", "16:15", "17:15", "19:30"]
+                    times: ["10:00", "12:00", "13:00", "15:00", "16:15", "17:15", "19:30"],
+                    notes: {}
                 },
                 {
                     id: "GALVARINO_LAUTARO_TEMUCO",
+                    origin: "Galvarino",
+                    destination: "Temuco",
                     name: "Galvarino - Lautaro - Temuco",
                     via: "Huincabus (Vía Lautaro)",
                     color: "border-amber-500",
                     badgeColor: "bg-amber-100 text-amber-800",
-                    times: ["08:30"]
+                    times: ["08:30"],
+                    notes: {}
                 },
                 {
                     id: "TEMUCO_LAUTARO_GALVARINO",
+                    origin: "Temuco",
+                    destination: "Galvarino",
                     name: "Temuco - Lautaro - Galvarino",
                     via: "Huincabus (Vía Lautaro)",
                     color: "border-rose-500",
                     badgeColor: "bg-rose-100 text-rose-800",
-                    times: ["14:15"]
+                    times: ["14:15"],
+                    notes: {}
                 }
             ],
             sunday: [
                 {
-                    id: "GALVARINO_CHOLCHOL_TEMUCO",
-                    name: "Galvarino - Temuco x Cholchol",
-                    via: "Huincabus (Vía Cholchol)",
-                    color: "border-teal-500",
-                    badgeColor: "bg-teal-100 text-teal-800",
-                    times: ["08:30", "12:30", "17:45"]
-                },
-                {
                     id: "CHOLCHOL_TEMUCO",
+                    origin: "Cholchol",
+                    destination: "Temuco",
                     name: "Cholchol - Temuco",
                     via: "Huincabus (Directo)",
                     color: "border-emerald-500",
                     badgeColor: "bg-emerald-100 text-emerald-800",
-                    times: ["08:00", "09:00", "13:00", "17:00", "18:15"]
+                    times: ["08:00", "09:00", "13:00", "17:00", "18:15"],
+                    notes: {}
+                },
+                {
+                    id: "CHOLCHOL_IMPERIAL",
+                    origin: "Cholchol",
+                    destination: "Nueva Imperial",
+                    name: "Cholchol - Nueva Imperial",
+                    via: "Terminal Cholchol",
+                    color: "border-purple-500",
+                    badgeColor: "bg-purple-100 text-purple-800",
+                    times: ["09:00", "11:00", "14:00", "17:00"],
+                    notes: {}
+                },
+                {
+                    id: "GALVARINO_CHOLCHOL_TEMUCO",
+                    origin: "Galvarino",
+                    destination: "Temuco",
+                    name: "Galvarino - Temuco x Cholchol",
+                    via: "Huincabus (Vía Cholchol)",
+                    color: "border-teal-500",
+                    badgeColor: "bg-teal-100 text-teal-800",
+                    times: ["08:30", "12:30", "17:45"],
+                    notes: {}
                 },
                 {
                     id: "TEMUCO_CHOLCHOL",
+                    origin: "Temuco",
+                    destination: "Cholchol",
                     name: "Temuco - Cholchol",
-                    via: "Huincabus (Salida desde Temuco)",
+                    via: "Huincabus",
                     color: "border-sky-500",
                     badgeColor: "bg-sky-100 text-sky-800",
-                    times: ["10:00", "13:00", "15:00", "18:15", "19:30"]
+                    times: ["10:00", "13:00", "15:00", "18:15", "19:30"],
+                    notes: {}
                 },
                 {
                     id: "TEMUCO_CHOLCHOL_GALVARINO",
+                    origin: "Temuco",
+                    destination: "Galvarino",
                     name: "Temuco - Cholchol - Galvarino",
-                    via: "Huincabus (Salida desde Temuco)",
+                    via: "Huincabus (Pasa por Cholchol)",
                     color: "border-indigo-500",
                     badgeColor: "bg-indigo-100 text-indigo-800",
-                    times: ["10:00", "13:00", "19:30"]
+                    times: ["10:00", "13:00", "19:30"],
+                    notes: {}
+                },
+                {
+                    id: "GALVARINO_LAUTARO_TEMUCO",
+                    origin: "Galvarino",
+                    destination: "Temuco",
+                    name: "Galvarino - Lautaro - Temuco",
+                    via: "Huincabus (Vía Lautaro)",
+                    color: "border-amber-500",
+                    badgeColor: "bg-amber-100 text-amber-800",
+                    times: ["08:30"],
+                    notes: {}
+                },
+                {
+                    id: "TEMUCO_LAUTARO_GALVARINO",
+                    origin: "Temuco",
+                    destination: "Galvarino",
+                    name: "Temuco - Lautaro - Galvarino",
+                    via: "Huincabus (Vía Lautaro)",
+                    color: "border-rose-500",
+                    badgeColor: "bg-rose-100 text-rose-800",
+                    times: ["14:15"],
+                    notes: {}
                 }
             ]
         };
 
+        const CHILE_HOLIDAYS_2026 = [
+            "01-01", "04-03", "04-04", "05-01", "05-21", "06-21", 
+            "06-29", "07-16", "08-15", "09-18", "09-19", "10-12", 
+            "10-31", "11-01", "12-08", "12-25"
+        ];
+
         let realTodayType = 'weekday';
         let currentDayFilter = 'weekday'; 
+        let selectedOrigin = 'ALL';
+        let selectedDestination = 'ALL';
         let selectedBusForReminder = null;
+        let isTodayHoliday = false;
 
         const DAY_NAMES = {
             weekday: 'Lunes a Viernes',
@@ -435,8 +554,9 @@
         };
 
         window.onload = function() {
-            detectCurrentDay();
+            detectCurrentDayAndHoliday();
             startClock();
+            renderFilterButtons();
             renderRoutes();
             updateNextBusBanner();
         };
@@ -452,19 +572,33 @@
             setInterval(update, 1000);
         }
 
-        function detectCurrentDay() {
-            const today = new Date().getDay();
+        function detectCurrentDayAndHoliday() {
+            const now = new Date();
+            const todayDayOfWeek = now.getDay();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const mmdd = `${month}-${day}`;
+
+            isTodayHoliday = CHILE_HOLIDAYS_2026.includes(mmdd);
             const badge = document.getElementById('detectedDayBadge');
-            
-            if (today === 0) {
+
+            if (todayDayOfWeek === 0 || isTodayHoliday) {
                 realTodayType = 'sunday';
-                badge.innerText = 'Hoy: Domingo / Festivo';
-            } else if (today === 6) {
+                if (isTodayHoliday) {
+                    badge.innerText = 'Hoy: ¡Es Feriado! (Horario Festivo)';
+                    badge.className = "text-xs font-bold bg-purple-600 text-white px-3 py-1 rounded-xl shadow-sm";
+                } else {
+                    badge.innerText = 'Hoy: Domingo';
+                    badge.className = "text-xs font-bold bg-black/20 px-3 py-1 rounded-xl";
+                }
+            } else if (todayDayOfWeek === 6) {
                 realTodayType = 'saturday';
                 badge.innerText = 'Hoy: Sábado';
+                badge.className = "text-xs font-bold bg-black/20 px-3 py-1 rounded-xl";
             } else {
                 realTodayType = 'weekday';
                 badge.innerText = 'Hoy: Lunes a Viernes';
+                badge.className = "text-xs font-bold bg-black/20 px-3 py-1 rounded-xl";
             }
             
             currentDayFilter = realTodayType;
@@ -478,13 +612,91 @@
             updateNextBusBanner();
         }
 
+        function setOrigin(orig) {
+            selectedOrigin = orig;
+            renderFilterButtons();
+            renderRoutes();
+        }
+
+        function setDestination(dest) {
+            selectedDestination = dest;
+            renderFilterButtons();
+            renderRoutes();
+        }
+
+        function resetAllFilters() {
+            selectedOrigin = 'ALL';
+            selectedDestination = 'ALL';
+            currentDayFilter = realTodayType;
+            updateDayButtonsUI();
+            renderFilterButtons();
+            renderRoutes();
+            updateNextBusBanner();
+        }
+
+        function renderFilterButtons() {
+            const origins = ['Cualquiera', 'Temuco', 'Cholchol', 'Galvarino'];
+            const destinations = ['Cualquiera', 'Temuco', 'Cholchol', 'Galvarino', 'Nueva Imperial', 'Lautaro'];
+
+            const originMap = { 'Cualquiera': 'ALL', 'Temuco': 'Temuco', 'Cholchol': 'Cholchol', 'Galvarino': 'Galvarino' };
+            const destMap = { 'Cualquiera': 'ALL', 'Temuco': 'Temuco', 'Cholchol': 'Cholchol', 'Galvarino': 'Galvarino', 'Nueva Imperial': 'Nueva Imperial', 'Lautaro': 'Lautaro' };
+
+            document.getElementById('originButtons').innerHTML = origins.map(orig => {
+                const val = originMap[orig];
+                const isSelected = (selectedOrigin === val);
+                const btnClass = isSelected ? 
+                    "py-2.5 px-3 rounded-2xl text-xs font-bold bg-teal-700 text-white shadow-md border-2 border-teal-800 flex items-center justify-between cursor-pointer" :
+                    "py-2.5 px-3 rounded-2xl text-xs font-semibold bg-slate-50 text-slate-700 border border-slate-200 hover:bg-slate-100 flex items-center justify-between cursor-pointer";
+                
+                return `
+                    <button onclick="setOrigin('${val}')" class="${btnClass}">
+                        <span class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full border-2 ${isSelected ? 'border-white bg-white' : 'border-slate-400'} flex items-center justify-center flex-shrink-0"></span>
+                            <span class="truncate">${orig}</span>
+                        </span>
+                    </button>
+                `;
+            }).join('');
+
+            document.getElementById('destButtons').innerHTML = destinations.map(dest => {
+                const val = destMap[dest];
+                const isSelected = (selectedDestination === val);
+                const btnClass = isSelected ? 
+                    "py-2.5 px-3 rounded-2xl text-xs font-bold bg-teal-700 text-white shadow-md border-2 border-teal-800 flex items-center justify-between cursor-pointer" :
+                    "py-2.5 px-3 rounded-2xl text-xs font-semibold bg-slate-50 text-slate-700 border border-slate-200 hover:bg-slate-100 flex items-center justify-between cursor-pointer";
+                
+                return `
+                    <button onclick="setDestination('${val}')" class="${btnClass}">
+                        <span class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full border-2 ${isSelected ? 'border-white bg-white' : 'border-slate-400'} flex items-center justify-center flex-shrink-0"></span>
+                            <span class="truncate">${dest}</span>
+                        </span>
+                    </button>
+                `;
+            }).join('');
+        }
+
         function updateDayButtonsUI() {
             ['weekday', 'saturday', 'sunday'].forEach(type => {
                 const btn = document.getElementById(`btn-${type}`);
-                if (type === currentDayFilter) {
-                    btn.className = "day-btn py-2.5 px-2 rounded-2xl text-xs sm:text-sm font-bold bg-teal-700 text-white shadow-md transition-all border border-teal-700 flex flex-col sm:flex-row items-center justify-center gap-1 cursor-pointer";
+                const tag = document.getElementById(`badge-${type}-tag`);
+                const dot = btn.querySelector('.indicator-dot');
+
+                const isRealToday = (type === realTodayType);
+                if (isRealToday) {
+                    tag.classList.remove('hidden');
                 } else {
-                    btn.className = "day-btn py-2.5 px-2 rounded-2xl text-xs sm:text-sm font-semibold bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition-all flex flex-col sm:flex-row items-center justify-center gap-1 cursor-pointer";
+                    tag.classList.add('hidden');
+                }
+
+                if (type === currentDayFilter) {
+                    btn.className = "day-btn py-3 px-4 rounded-2xl text-xs sm:text-sm font-bold bg-teal-700 text-white shadow-md transition-all border-2 border-teal-800 flex items-center justify-between sm:justify-center gap-2 cursor-pointer";
+                    dot.style.background = "#ffffff";
+                    dot.style.borderColor = "#ffffff";
+                } else {
+                    btn.className = "day-btn py-3 px-4 rounded-2xl text-xs sm:text-sm font-semibold bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 transition-all flex items-center justify-between sm:justify-center gap-2 cursor-pointer";
+                    dot.style.background = "transparent";
+                    dot.style.borderColor = "#94a3b8";
                 }
             });
         }
@@ -492,6 +704,12 @@
         function timeToMinutes(timeStr) {
             const [hours, minutes] = timeStr.split(':').map(Number);
             return hours * 60 + minutes;
+        }
+
+        function minutesToTime(mins) {
+            const h = Math.floor(mins / 60) % 24;
+            const m = mins % 60;
+            return String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
         }
 
         function formatMinutesDiff(diff) {
@@ -527,7 +745,7 @@
             const now = new Date();
             const currentMins = now.getHours() * 60 + now.getMinutes();
 
-            const currentDayRoutes = SCHEDULES[currentDayFilter] || [];
+            const currentDayRoutes = getProcessedRoutesForDisplay();
             let upcomingBuses = [];
 
             currentDayRoutes.forEach(route => {
@@ -547,12 +765,9 @@
             });
 
             if (upcomingBuses.length > 0) {
-                // Ordenar por menor diferencia de tiempo
                 upcomingBuses.sort((a, b) => a.diff - b.diff);
                 const nextDiff = upcomingBuses[0].diff;
                 const nextTime = upcomingBuses[0].time;
-
-                // Filtrar TODOS los buses que salgan exactamente en ese mismo minuto
                 const simultaneousBuses = upcomingBuses.filter(b => b.time === nextTime);
 
                 mainText.innerHTML = `
@@ -573,7 +788,7 @@
                 `).join('');
 
             } else {
-                mainText.innerText = "No quedan más salidas hoy";
+                mainTitle.innerText = "No quedan más salidas hoy";
                 subText.innerHTML = `
                     <div class="flex items-center gap-1.5 text-amber-100">
                         <i data-lucide="moon" class="w-4 h-4"></i>
@@ -584,32 +799,185 @@
             lucide.createIcons();
         }
 
+        function getProcessedRoutesForDisplay() {
+            let baseRoutes = JSON.parse(JSON.stringify(SCHEDULES[currentDayFilter] || []));
+            const now = new Date();
+            let dayOfWeek = (currentDayFilter === 'weekday') ? ((now.getDay() >= 1 && now.getDay() <= 5) ? now.getDay() : 1) : 1;
+
+            baseRoutes.forEach(route => {
+                if (currentDayFilter === 'weekday' && route.id === "CHOLCHOL_IMPERIAL") {
+                    route.times = route.times.filter(t => {
+                        if (t === '12:00' || t === '14:00') {
+                            return [1, 3, 5].includes(dayOfWeek);
+                        }
+                        return true;
+                    });
+                    if (route.notes && route.notes["10:00"]) {
+                        if ([1, 3, 5].includes(dayOfWeek)) {
+                            route.notes["10:00"] = "Turischol";
+                        } else if ([2, 4].includes(dayOfWeek)) {
+                            route.notes["10:00"] = "Nehuenmapu";
+                        }
+                    }
+                }
+            });
+
+            // Construcción exacta en el orden estricto de las 7 tarjetas solicitadas:
+            let constructedRoutes = [];
+
+            // 1. Cholchol - Temuco
+            const cholcholTemuco = baseRoutes.find(r => r.id === "CHOLCHOL_TEMUCO");
+            if (cholcholTemuco) {
+                constructedRoutes.push({
+                    id: "CHOLCHOL_TEMUCO_CARD",
+                    origin: "Cholchol",
+                    destination: "Temuco",
+                    name: "Cholchol ➔ Temuco",
+                    via: "Huincabus (Directo)",
+                    color: "border-emerald-500",
+                    badgeColor: "bg-emerald-100 text-emerald-800",
+                    times: cholcholTemuco.times,
+                    notes: cholcholTemuco.notes || {}
+                });
+            }
+
+            // 2. Cholchol - Imperial
+            const cholcholImperial = baseRoutes.find(r => r.id === "CHOLCHOL_IMPERIAL");
+            if (cholcholImperial) {
+                constructedRoutes.push({
+                    id: "CHOLCHOL_IMPERIAL_CARD",
+                    origin: "Cholchol",
+                    destination: "Nueva Imperial",
+                    name: "Cholchol ➔ Nueva Imperial",
+                    via: "Terminal Cholchol",
+                    color: "border-purple-500",
+                    badgeColor: "bg-purple-100 text-purple-800",
+                    times: cholcholImperial.times,
+                    notes: cholcholImperial.notes || {}
+                });
+            }
+
+            // 3. Cholchol - Galvarino (calculado dinámicamente desde el servicio Galvarino-Temuco x Cholchol o salidas de Temuco)
+            let cholcholGalvarinoTimes = [];
+            if (currentDayFilter === 'weekday') {
+                cholcholGalvarinoTimes = ["07:50", "09:00", "10:00", "11:00", "12:00", "13:00", "16:00", "16:30", "17:15", "18:15", "18:45", "19:45", "20:00", "21:15"];
+            } else if (currentDayFilter === 'saturday') {
+                cholcholGalvarinoTimes = ["11:00", "13:00", "14:00", "16:00", "17:15", "18:15", "20:30"];
+            } else {
+                cholcholGalvarinoTimes = ["11:00", "14:00", "20:30"];
+            }
+            constructedRoutes.push({
+                id: "CHOLCHOL_GALVARINO_CARD",
+                origin: "Cholchol",
+                destination: "Galvarino",
+                name: "Cholchol ➔ Galvarino",
+                via: "Huincabus",
+                color: "border-teal-500",
+                badgeColor: "bg-teal-100 text-teal-800",
+                times: cholcholGalvarinoTimes,
+                notes: {}
+            });
+
+            // 4. Temuco - Cholchol (Exclusivo directo)
+            const temucoCholcholRaw = baseRoutes.find(r => r.id === "TEMUCO_CHOLCHOL");
+            const temucoGalvRaw = baseRoutes.find(r => r.id === "TEMUCO_CHOLCHOL_GALVARINO");
+            if (temucoCholcholRaw) {
+                let exclusiveCholcholTimes = temucoCholcholRaw.times.filter(t => !temucoGalvRaw || !temucoGalvRaw.times.includes(t));
+                constructedRoutes.push({
+                    id: "TEMUCO_CHOLCHOL_SOLO",
+                    origin: "Temuco",
+                    destination: "Cholchol",
+                    name: "Temuco ➔ Cholchol",
+                    via: "Huincabus (Directo a Cholchol)",
+                    color: "border-sky-500",
+                    badgeColor: "bg-sky-100 text-sky-800",
+                    times: exclusiveCholcholTimes,
+                    notes: temucoCholcholRaw.notes || {}
+                });
+            }
+
+            // 5. Temuco - Cholchol - Galvarino
+            if (temucoGalvRaw) {
+                let galvTimes = temucoGalvRaw.times;
+                let galvNotes = {};
+                galvTimes.forEach(t => { galvNotes[t] = "Huincabus)(Pasa por Cholchol y continúa hacia Galvarino"; });
+                constructedRoutes.push({
+                    id: "TEMUCO_CHOLCHOL_GALVARINO_FINAL",
+                    origin: "Temuco",
+                    destination: "Galvarino",
+                    name: "Temuco ➔ Cholchol ➔ Galvarino",
+                    via: "Huincabus (Mismo bus: llega a Cholchol y sigue a Galvarino)",
+                    color: "border-indigo-500",
+                    badgeColor: "bg-indigo-100 text-indigo-800",
+                    times: galvTimes,
+                    notes: galvNotes
+                });
+            }
+
+            // 6. Galvarino - Lautaro - Temuco
+            const galvarinoLautaroTemuco = baseRoutes.find(r => r.id === "GALVARINO_LAUTARO_TEMUCO");
+            if (galvarinoLautaroTemuco) {
+                constructedRoutes.push({
+                    id: "GALVARINO_LAUTARO_TEMUCO_CARD",
+                    origin: "Galvarino",
+                    destination: "Temuco",
+                    name: "Galvarino ➔ Lautaro ➔ Temuco",
+                    via: "Huincabus (Vía Lautaro)",
+                    color: "border-amber-500",
+                    badgeColor: "bg-amber-100 text-amber-800",
+                    times: galvarinoLautaroTemuco.times,
+                    notes: galvarinoLautaroTemuco.notes || {}
+                });
+            }
+
+            // 7. Temuco - Lautaro - Galvarino
+            const temucoLautaroGalvarino = baseRoutes.find(r => r.id === "TEMUCO_LAUTARO_GALVARINO");
+            if (temucoLautaroGalvarino) {
+                constructedRoutes.push({
+                    id: "TEMUCO_LAUTARO_GALVARINO_CARD",
+                    origin: "Temuco",
+                    destination: "Galvarino",
+                    name: "Temuco ➔ Lautaro ➔ Galvarino",
+                    via: "Huincabus (Vía Lautaro)",
+                    color: "border-rose-500",
+                    badgeColor: "bg-rose-100 text-rose-800",
+                    times: temucoLautaroGalvarino.times,
+                    notes: temucoLautaroGalvarino.notes || {}
+                });
+            }
+
+            // Aplicar filtros de origen/destino si el usuario los selecciona en los botones
+            let routes = constructedRoutes;
+            if (selectedOrigin !== 'ALL') {
+                routes = routes.filter(r => r.origin === selectedOrigin);
+            }
+            if (selectedDestination !== 'ALL') {
+                routes = routes.filter(r => r.destination === selectedDestination || (selectedDestination === 'Cholchol' && r.name.includes('Cholchol')));
+            }
+
+            return routes;
+        }
+
         function renderRoutes() {
             const container = document.getElementById('routesContainer');
-            const selectedRouteId = document.getElementById('routeSelect').value;
-            const routes = SCHEDULES[currentDayFilter] || [];
+            const routes = getProcessedRoutesForDisplay();
 
             const isViewingToday = (currentDayFilter === realTodayType);
             const now = new Date();
             const currentMins = now.getHours() * 60 + now.getMinutes();
 
-            let filteredRoutes = routes;
-            if (selectedRouteId !== 'ALL') {
-                filteredRoutes = routes.filter(r => r.id === selectedRouteId);
-            }
-
-            if (filteredRoutes.length === 0) {
+            if (routes.length === 0) {
                 container.innerHTML = `
                     <div class="bg-white rounded-3xl p-8 text-center text-slate-500 shadow-sm border border-slate-200">
                         <i data-lucide="alert-circle" class="w-10 h-10 mx-auto text-amber-500 mb-2"></i>
-                        <p class="font-bold">No hay recorridos disponibles para esta ruta en el día seleccionado.</p>
+                        <p class="font-bold">No hay recorridos disponibles para la combinación seleccionada.</p>
                     </div>
                 `;
                 lucide.createIcons();
                 return;
             }
 
-            container.innerHTML = filteredRoutes.map(route => {
+            container.innerHTML = routes.map(route => {
                 let nextBusTime = null;
                 let nextBusDiff = null;
 
@@ -625,8 +993,6 @@
 
                 return `
                     <div class="bg-white rounded-3xl p-5 shadow-sm border-l-8 ${route.color} border-y border-r border-slate-200/80 transition-all">
-                        
-                        <!-- Encabezado de la Ruta -->
                         <div class="flex flex-wrap items-start justify-between gap-2 mb-4 pb-3 border-b border-slate-100">
                             <div>
                                 <h3 class="font-bold text-slate-800 text-base sm:text-lg flex items-center gap-2">
@@ -661,7 +1027,6 @@
                             `}
                         </div>
 
-                        <!-- Grid de Horarios -->
                         <div>
                             <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2.5 flex items-center justify-between">
                                 <span>Salidas programadas (${route.times.length})</span>
@@ -688,12 +1053,11 @@
                                     }
 
                                     return `
-                                        <button onclick="openReminderModal('${route.name}', '${time}', '${route.via}')" class="relative group border rounded-2xl p-2 text-center transition-all ${bgClass}">
+                                        <button onclick="openReminderModal('${route.name}', '${time}', '${route.via}')" class="relative group border rounded-2xl p-3 text-center transition-all flex flex-col items-center justify-center ${bgClass}">
                                             <div class="text-sm font-bold flex items-center justify-center gap-1">
                                                 <span>${time}</span>
-                                                <i data-lucide="bell" class="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity"></i>
                                             </div>
-                                            ${note ? `<div class="text-[9px] truncate opacity-90 font-normal leading-tight mt-0.5 text-teal-900 font-semibold" title="${note}">${note}</div>` : ''}
+                                            ${note ? `<div class="text-[9px] line-clamp-2 opacity-90 font-semibold leading-tight mt-1 text-teal-900 text-center" title="${note}">${note}</div>` : ''}
                                         </button>
                                     `;
                                 }).join('')}
@@ -737,7 +1101,7 @@
             const endDate = new Date(eventDate.getTime() + 30 * 60000);
 
             const title = encodeURIComponent(`Bus: ${routeName}`);
-            const details = encodeURIComponent(`Salida del bus ${routeName} (${via}). Generado por Huincabus App / Tidreamsoporte.`);
+            const details = encodeURIComponent(`Salida del bus ${routeName} (${via}). Recuerda llegar con anticipación.`);
             const dates = `${formatGCalDate(eventDate)}/${formatGCalDate(endDate)}`;
 
             const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${dates}&details=${details}&add=15`;
@@ -762,7 +1126,7 @@ VERSION:2.0
 PRODID:-//Huincabus App//Tidreamsoporte//ES
 BEGIN:VEVENT
 SUMMARY:Bus: ${routeName}
-DESCRIPTION:Salida del bus ${routeName} (${via}). Notificación 15 min antes.
+DESCRIPTION:Salida del bus ${routeName} (${via}). Recuerda llegar con anticipación. Notificación 15 min antes.
 DTSTART:${formatDate(eventDate)}
 DTEND:${formatDate(endDate)}
 BEGIN:VALARM
@@ -791,9 +1155,7 @@ END:VCALENDAR`;
                 resultBox.className = "bg-amber-50 border border-amber-200 text-amber-800 p-4 rounded-2xl text-sm flex items-start gap-3";
                 resultBox.innerHTML = `
                     <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5"></i>
-                    <div>
-                        <strong>Por favor ingresa una hora</strong> para realizar la búsqueda.
-                    </div>
+                    <div><strong>Por favor ingresa una hora</strong> para realizar la búsqueda.</div>
                 `;
                 resultBox.classList.remove('hidden');
                 lucide.createIcons();
@@ -801,7 +1163,7 @@ END:VCALENDAR`;
             }
 
             const targetMins = timeToMinutes(timeInput);
-            const routes = SCHEDULES[currentDayFilter] || [];
+            const routes = getProcessedRoutesForDisplay();
             
             let matchExact = [];
             let matchClose = []; 
@@ -820,7 +1182,6 @@ END:VCALENDAR`;
             });
 
             resultBox.classList.remove('hidden');
-
             const dayLabel = DAY_NAMES[currentDayFilter];
 
             if (matchExact.length > 0) {
