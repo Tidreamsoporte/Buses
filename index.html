@@ -18,7 +18,6 @@ button{font:inherit;cursor:pointer;min-height:44px}
 .w{max-width:56rem;margin:0 auto;padding:0 16px;width:100%}
 header{background:linear-gradient(135deg,#065f46,#0f766e 50%,#0369a1);color:#fff;position:sticky;top:0;z-index:50;box-shadow:0 4px 18px #0003}
 .hd{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0}
-/* Imagen del bus ampliada en la cabecera */
 .hd img{height:85px;max-width:70%;object-fit:contain}
 .clk{background:#0003;border:1px solid #fff3;border-radius:14px;padding:6px 12px;text-align:right}
 .clk small{display:block;font-size:12px;color:#99f6e4;font-weight:700}
@@ -79,6 +78,69 @@ main{flex:1;padding:16px 16px 32px;display:grid;gap:16px;align-content:start}
 .b1{background:#0f766e}.b2{background:#2563eb}.b3{background:#1e293b}.b4{background:#e2e8f0;color:#334155}
 footer{background:#0f172a;color:#94a3b8;text-align:center;padding:20px 16px;font-size:13px}footer b{color:#5eead4}
 @media(prefers-reduced-motion:no-preference){.t,.opt{transition:background .15s,border-color .15s}}
+@media(prefers-reduced-motion:reduce){.pick-btn,.e-dest{transition:none}}
+
+/* Bloqueo de scroll de fondo mientras hay un módulo abierto */
+body:has(.modal:not([hidden])){overflow:hidden}
+.box{max-height:calc(100vh - 32px);overflow-y:auto}
+
+/* Módulo de elección de vista (aparece después del aviso) */
+.pick{max-width:460px}
+.pick h3{font-size:1.35rem;line-height:1.25}
+.pick .hint{margin:6px 0 0}
+.pick-opts{display:grid;gap:12px;margin-top:18px}
+.pick-btn{display:flex;align-items:center;gap:14px;width:100%;text-align:left;min-height:92px;background:#fff;border:3px solid #cbd5e1;border-radius:18px;padding:14px 16px;color:var(--ink);transition:border-color .15s,background .15s}
+.pick-btn:hover,.pick-btn:focus-visible{border-color:var(--brand);background:#f0fdfa}
+.pick-btn .ic{flex:none;width:58px;height:58px;border-radius:16px;background:#ccfbf1;display:grid;place-items:center;font-size:30px}
+.pick-btn.elder .ic{background:#fef3c7}
+.pick-btn b{display:block;font-size:1.2rem}
+.pick-btn small{display:block;color:var(--mut);font-size:.9rem;line-height:1.3;margin-top:2px}
+
+/* Vista Adulto Mayor */
+#viewElder{--es:1;padding:0;overflow:hidden;font-size:calc(1.125rem*var(--es))}
+.e-head{background:linear-gradient(135deg,#0f2a3d,#0f766e);color:#fff;padding:18px}
+.e-head h2{margin:0;font-size:1.35em;line-height:1.2}
+.e-head p{margin:6px 0 0;color:#ccfbf1;font-size:.88em}
+.e-tools{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.e-tool{background:#ffffff1f;border:1px solid #ffffff66;color:#fff;border-radius:99px;padding:8px 14px;font-weight:700;font-size:.8em;min-height:44px}
+.e-tool:hover{background:#ffffff33}
+.e-body{padding:18px}
+.e-q{margin:0 0 12px;font-size:1.3em;font-weight:800;line-height:1.25}
+.e-opts{display:grid;gap:12px}
+#viewElder .d-galvarino{--c:#b45309;--cb:#fef3c7}
+.e-dest{display:flex;align-items:center;gap:16px;width:100%;text-align:left;min-height:88px;background:var(--cb);color:var(--ink);border:3px solid transparent;border-left:12px solid var(--c);border-radius:18px;padding:14px 16px;transition:background .15s,color .15s}
+.e-dest .ic{flex:none;width:54px;height:54px;border-radius:50%;background:var(--c);color:#fff;display:grid;place-items:center;font-size:1.6em;font-weight:800}
+.e-dest b{display:block;font-size:1.5em;line-height:1.15}
+.e-dest small{display:block;color:#334155;font-size:.78em;margin-top:2px}
+@media(min-width:640px){
+  .e-opts{grid-template-columns:repeat(3,1fr)}
+  .e-dest{flex-direction:column;text-align:center;border-left:3px solid transparent;border-top:12px solid var(--c);padding:16px 12px}
+}
+.e-dest[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#fff}
+.e-dest[aria-pressed="true"] small{color:#fff}
+.e-dest[aria-pressed="true"] .ic{background:#fff;color:var(--c)}
+
+.eres{margin-top:18px;background:#fff;border:3px solid var(--c);border-radius:20px;overflow:hidden;scroll-margin-top:130px}
+.eres:focus{outline:none}
+.e-band{background:var(--c);color:#fff;padding:10px 16px;font-weight:800;font-size:1.1em}
+.e-main{padding:18px 16px;text-align:center}
+.e-lbl{margin:0;color:var(--mut);font-weight:600}
+.e-time{margin:2px 0 8px;font-size:3.6em;font-weight:800;line-height:1.05;letter-spacing:-.02em;color:var(--c);font-variant-numeric:tabular-nums}
+.e-time span{font-size:.3em;letter-spacing:0}
+.e-when{display:inline-block;margin:0;background:#fde047;color:#422006;border-radius:99px;padding:8px 20px;font-weight:800;font-size:1.2em}
+.e-none{margin:0 0 6px;font-weight:800;font-size:1.15em}
+.e-co{margin:14px 0 0;font-size:1.1em}
+.e-co b{color:var(--c)}.e-co small{display:block;color:var(--mut);font-size:.8em}
+.e-later{background:#f8fafc;border-top:1px solid #e2e8f0;padding:14px 16px}
+.e-later p{margin:0 0 8px;font-weight:700;color:#334155;font-size:.9em}
+.e-later ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.e-later li{background:var(--cb);color:var(--c);border-radius:14px;padding:6px 14px;text-align:center;line-height:1.2}
+.e-later li b{font-size:1.2em;display:block}.e-later li small{font-size:.7em;color:#334155}
+.e-act{display:grid;gap:10px;padding:14px 16px 16px}
+.e-big{display:flex;align-items:center;justify-content:center;gap:10px;min-height:58px;border:0;border-radius:16px;padding:10px 16px;font-weight:800;font-size:1em;color:#fff;text-decoration:none;text-align:center}
+.e-re{background:var(--brand)}.e-re:hover{background:#115e59}
+.e-wa{background:#15803d}.e-wa:hover{background:#166534}
+@media(min-width:640px){.e-act{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
@@ -88,6 +150,17 @@ footer{background:#0f172a;color:#94a3b8;text-align:center;padding:20px 16px;font
     <img src="https://raw.githubusercontent.com/Tidreamsoporte/Buses/refs/heads/main/1.png" alt="Tidreamsoporte" style="height:64px" onerror="this.hidden=true">
     <div class="warnbox"><b id="wt">⚠️ Aviso importante</b><br>Esta es una aplicación informativa independiente. Los horarios provienen de las pizarras y ventanillas oficiales. No nos hacemos responsables por imprevistos o cambios de las empresas operadoras (Huincabus, Barbosa, Turischol, Nehuenmapu).</div>
     <button id="ok" class="bt b1">Entendido y continuar</button>
+  </div>
+</div>
+
+<div id="picker" class="modal" role="dialog" aria-modal="true" aria-labelledby="pkt" hidden>
+  <div class="box pick">
+    <h3 id="pkt">¿Cómo quieres ver los horarios?</h3>
+    <p class="hint">Elige una vista. Si más adelante quieres cambiarla, actualiza la página.</p>
+    <div class="pick-opts">
+      <button id="pickPub" class="pick-btn"><span class="ic" aria-hidden="true">📱</span><span><b>Todo público</b><small>Buscador, filtros y todos los horarios del día</small></span></button>
+      <button id="pickElder" class="pick-btn elder"><span class="ic" aria-hidden="true">👴</span><span><b>Adulto mayor</b><small>Botones grandes, letra grande y una voz que dice el próximo bus</small></span></button>
+    </div>
   </div>
 </div>
 
@@ -109,34 +182,67 @@ footer{background:#0f172a;color:#94a3b8;text-align:center;padding:20px 16px;font
 </div></header>
 
 <main class="w">
+  <!-- PRIMER MENSAJE DE INFORMACIÓN -->
   <section class="card tip"><b>🕒 Llega con anticipación.</b> Si el bus dice una hora, puede salir justo a tiempo, un poco antes o un poco después según el tráfico.</section>
 
-  <section class="card hero" aria-live="polite">
-    <div class="top"><span class="chip">✨ Detección automática</span><span class="chip" id="badge"></span></div>
-    <p id="nbTitle"></p>
-    <div id="nbMain"></div>
-    <div id="nbSub"></div>
-  </section>
-
-  <section class="card">
-    <div class="bar"><h2>Busca tu bus</h2><button class="ghost" id="reset">↺ Restablecer filtros</button></div>
-    <div class="sec"><p class="step"><i>1</i>¿Desde dónde sales?</p><div class="opts" id="o1"></div></div>
-    <div class="sec"><p class="step"><i>2</i>¿A dónde vas?</p><div class="opts" id="o2"></div></div>
-    <div class="sec"><p class="step"><i>3</i>¿Qué día viajas?</p><div class="opts" id="o3"></div></div>
-    <div class="sec"><label class="step" for="tq">🔎 ¿Pasa bus a una hora en particular?</label>
-      <div class="qr"><input type="time" id="tq"><button class="go" id="qb">Consultar</button><button class="ghost" id="qx" aria-label="Borrar consulta">✕</button></div></div>
-  </section>
-
-  <div id="qres" hidden></div>
-
-  <section aria-label="Horarios">
-    <div class="card" style="margin-bottom:14px">
-      <p class="step" style="margin-bottom:8px">Mostrar buses que…</p>
-      <div class="opts" id="dirs"></div>
+  <!-- VISTA ADULTO MAYOR -->
+  <div id="viewElder" class="card" hidden>
+    <div class="e-head">
+      <h2>Próximo bus desde Cholchol</h2>
+      <p>Toca el lugar al que deseas viajar y el teléfono te dirá la hora en voz alta.</p>
+      <div class="e-tools">
+        <button class="e-tool" id="speakWelcome">🔊 Escuchar instrucciones</button>
+        <button class="e-tool" id="elderVoice" aria-pressed="true">🔊 Voz: Sí</button>
+        <button class="e-tool" id="elderSize">🔠 Letra: Normal</button>
+      </div>
     </div>
-    <div id="routes"></div>
-  </section>
+    <div class="e-body">
+      <p class="e-q" id="eq">¿A dónde deseas viajar?</p>
+      <div class="e-opts" role="group" aria-labelledby="eq">
+        <button class="e-dest d-to" data-dest="Temuco" aria-pressed="false"><span class="ic" aria-hidden="true">↗</span><span><b>Temuco</b><small>Sale desde Cholchol</small></span></button>
+        <button class="e-dest d-imperial" data-dest="Nueva Imperial" aria-pressed="false"><span class="ic" aria-hidden="true">➔</span><span><b>Nueva Imperial</b><small>Sale desde Cholchol</small></span></button>
+        <button class="e-dest d-galvarino" data-dest="Galvarino" aria-pressed="false"><span class="ic" aria-hidden="true">➔</span><span><b>Galvarino</b><small>Sale desde Cholchol</small></span></button>
+      </div>
+      <div id="elderResult" class="eres" tabindex="-1" hidden>
+        <div id="elderBody"></div>
+        <div class="e-act">
+          <button id="elderReplay" class="e-big e-re">🔊 Escuchar de nuevo</button>
+          <a id="elderWa" class="e-big e-wa" target="_blank" rel="noopener">💬 Enviar por WhatsApp</a>
+        </div>
+      </div>
+    </div>
+  </div>
 
+  <!-- VISTA TODO PÚBLICO -->
+  <div id="viewPublic">
+    <section class="card hero" aria-live="polite">
+      <div class="top"><span class="chip">✨ Detección automática</span><span class="chip" id="badge"></span></div>
+      <p id="nbTitle"></p>
+      <div id="nbMain"></div>
+      <div id="nbSub"></div>
+    </section>
+
+    <section class="card" style="margin-top:16px">
+      <div class="bar"><h2>Busca tu bus</h2><button class="ghost" id="reset">↺ Restablecer filtros</button></div>
+      <div class="sec"><p class="step"><i>1</i>¿Desde dónde sales?</p><div class="opts" id="o1"></div></div>
+      <div class="sec"><p class="step"><i>2</i>¿A dónde vas?</p><div class="opts" id="o2"></div></div>
+      <div class="sec"><p class="step"><i>3</i>¿Qué día viajas?</p><div class="opts" id="o3"></div></div>
+      <div class="sec"><label class="step" for="tq">🔎 ¿Pasa bus a una hora en particular?</label>
+        <div class="qr"><input type="time" id="tq"><button class="go" id="qb">Consultar</button><button class="ghost" id="qx" aria-label="Borrar consulta">✕</button></div></div>
+    </section>
+
+    <div id="qres" hidden></div>
+
+    <section aria-label="Horarios" style="margin-top:16px">
+      <div class="card" style="margin-bottom:14px">
+        <p class="step" style="margin-bottom:8px">Mostrar buses que…</p>
+        <div class="opts" id="dirs"></div>
+      </div>
+      <div id="routes"></div>
+    </section>
+  </div>
+
+  <!-- RESPALDO FOTOGRÁFICO OFICIAL -->
   <section class="card">
     <h2 style="margin:0 0 6px;font-size:17px">📷 Respaldo fotográfico oficial</h2>
     <p class="hint">Los horarios provienen de las fotos oficiales de las pizarras de los terminales. Toca una imagen para verla en grande.</p>
@@ -202,7 +308,6 @@ const fmt=d=>d<60?'en '+d+' min':'en '+Math.floor(d/60)+' h'+(d%60?' '+d%60+' mi
 const isHol=d=>(d.getFullYear()===2026?HOL26:HOLFIX).includes(String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'));
 const dayType=d=>isHol(d)||d.getDay()===0?'sunday':d.getDay()===6?'saturday':'weekday';
 
-// Detección de dirección incluyendo a Galvarino
 const dirOf = s => s[s.length-1] === 'Temuco' ? 'to' : s[0] === 'Temuco' ? 'from' : s[s.length-1] === 'Nueva Imperial' ? 'imperial' : s[s.length-1] === 'Cholchol' ? 'chol' : s[s.length-1] === 'Galvarino' ? 'galvarino' : 'other';
 
 const pill=d=>'<span class="pill">'+DL[d][0]+' '+DL[d][1]+'</span>';
@@ -212,7 +317,7 @@ let real,view,org='ALL',dst='ALL',dirF='ALL',rem=null,lastMin=-1;const open=new 
 const vdow=()=>{const d=new Date().getDay();return view==='weekday'&&d>=1&&d<=5?d:1};
 function note(r,t,dow){return r.id==='CI'&&t==='10:00'?([2,4].includes(dow)?'Nehuenmapu':'Turischol'):(r.n||{})[t]||''}
 function info(r,t,dow){const n=note(r,t,dow),c=COS.find(x=>n.includes(x));return{co:c||r.co,x:(c?n.replace(c,''):n).trim()}}
-function visible(){const dow=vdow();return R.filter(r=>r.d[view]).map(r=>{
+function visible(dw){const dow=dw||vdow();return R.filter(r=>r.d[view]).map(r=>{
   let ts=r.d[view];
   if(r.minus)ts=ts.filter(t=>!(R.find(x=>x.id===r.minus).d[view]||[]).includes(t));
   if(r.dw)ts=ts.filter(t=>!r.dw[t]||r.dw[t].includes(dow));
@@ -251,11 +356,22 @@ function cards(){const rs=visible(),cur=nowMin(),today=view===real,dow=vdow();
       +(r.ts.length>short.length||isO?'<button class="more" data-o="'+r.id+'">'+(isO?'Mostrar menos':'Ver las '+r.ts.length+' salidas del día')+'</button>':'')+'</article>'}).join('')
   :'<div class="card" style="text-align:center"><b>No hay recorridos para esta combinación.</b><p class="hint">Cambia el origen, destino o día para ver más opciones.</p></div>'}
 
-function render(){filters();banner();cards()}
+function render(){filters();banner();cards();refreshElder()}
 function tick(){const n=new Date();$('clock').textContent=n.toLocaleTimeString('es-CL',{hour12:false})+' hrs';
   const k=n.getHours()*60+n.getMinutes();if(k===lastMin)return;lastMin=k;
   if(dayType(n)!==real){setToday();view=real;render();return}
-  banner();cards()}
+  banner();cards();refreshElder()}
+
+function openPicker(){$('picker').hidden=false;$('pickPub').focus()}
+function pickMode(mode){
+  $('picker').hidden=true;
+  $('viewPublic').hidden=mode!=='public';
+  $('viewElder').hidden=mode!=='elder';
+  window.scrollTo(0,0);
+  if(mode==='elder')speakText('Bienvenido. Toca el botón del lugar al que deseas viajar para escuchar el próximo horario.');
+}
+$('pickPub').onclick=()=>pickMode('public');
+$('pickElder').onclick=()=>pickMode('elder');
 
 document.addEventListener('click',e=>{
   const b=e.target.closest('[data-k]');
@@ -264,10 +380,11 @@ document.addEventListener('click',e=>{
   if(o){const id=o.dataset.o;open.has(id)?open.delete(id):open.add(id);cards();return}
   const t=e.target.closest('[data-t]');if(t)openRem(t.dataset.r,t.dataset.t)});
 $('reset').onclick=()=>{org=dst=dirF='ALL';view=real;open.clear();$('qres').hidden=true;render()};
-document.onkeydown=e=>{if(e.key==='Escape'){$('rm').hidden=true;$('welcome').hidden=true}};
+document.onkeydown=e=>{if(e.key==='Escape')$('rm').hidden=true};
 
 try{if(Date.now()-(+localStorage.getItem('avisoOk')||0)<2592e6)$('welcome').hidden=true}catch(e){}
-$('ok').onclick=()=>{$('welcome').hidden=true;try{localStorage.setItem('avisoOk',Date.now())}catch(e){}};
+$('ok').onclick=()=>{$('welcome').hidden=true;try{localStorage.setItem('avisoOk',Date.now())}catch(e){}openPicker()};
+if($('welcome').hidden)openPicker();
 
 function nextDate(type,x){const p=x.split(':');for(let k=0;k<15;k++){const d=new Date();d.setDate(d.getDate()+k);d.setHours(+p[0],+p[1],0,0);if(dayType(d)===type&&d>new Date())return d}return new Date()}
 function openRem(id,x){const r=R.find(z=>z.id===id),d=nextDate(view,x);rem={name:r.st.join(' ➔ '),co:r.co,x:x,d:d};
@@ -296,6 +413,75 @@ $('qb').onclick=()=>{const v=$('tq').value,b=$('qres');b.hidden=false;
   b.innerHTML=ex.length?'<p><b>¡Sí!</b> ('+DN[view]+') pasa bus a las '+v+' hrs:</p><ul>'+li(ex)+'</ul>'
    :cl.length?'<p>No hay bus exacto a las '+v+' hrs, pero salen pronto:</p><ul>'+li(cl)+'</ul>'
    :'<p>No hay buses cerca de las '+v+' hrs ('+DN[view]+').</p>'};
+
+let elderDest=null,voiceOn=true,sizeI=0;
+const ELD={'Temuco':{cls:'d-to'},'Nueva Imperial':{cls:'d-imperial'},'Galvarino':{cls:'d-galvarino'}};
+const SZ=[[1,'Normal'],[1.2,'Grande'],[1.4,'Muy grande']];
+const plural=(n,a,b)=>n+' '+(n===1?a:b);
+const spanDur=d=>d<60?plural(d,'minuto','minutos'):plural(Math.floor(d/60),'hora','horas')+(d%60?' y '+plural(d%60,'minuto','minutos'):'');
+const say=t=>{const p=t.split(':');return (+p[0])+' horas'+(+p[1]?' con '+(+p[1])+' minutos':'')};
+const hasVoice='speechSynthesis' in window;
+
+function speakText(txt,force){
+  if(!hasVoice||!(voiceOn||force))return;
+  window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(txt);
+  u.lang='es-CL';u.rate=0.95;
+  const vs=window.speechSynthesis.getVoices(),v=vs.find(x=>x.lang==='es-CL')||vs.find(x=>x.lang&&x.lang.startsWith('es'));
+  if(v)u.voice=v;
+  window.speechSynthesis.speak(u);
+}
+
+/* Misma lógica de horarios de siempre: salidas desde Cholchol hacia el destino */
+function elderList(dest,rows,from){const L=[];
+  rows.forEach(r=>{if(r.st[0]==='Cholchol'&&r.st.slice(1).includes(dest))r.ts.forEach(x=>{if(m(x)>=from)L.push({r:r,x:x,diff:m(x)-from})})});
+  return L.sort((a,b)=>a.diff-b.diff)}
+function tomorrowFirst(dest){const d=new Date();d.setDate(d.getDate()+1);
+  const type=dayType(d),dow=type==='weekday'?d.getDay():1,keep=view;view=type;
+  try{const L=elderList(dest,visible(dow),0);return L.length?{b:L[0],type:type,dow:dow}:null}finally{view=keep}}
+
+function showElder(dest,user){
+  elderDest=dest;
+  const cfg=ELD[dest],cur=nowMin(),dow=vdow(),L=elderList(dest,visible(),cur),box=$('elderResult'),body=$('elderBody'),wa=$('elderWa');
+  box.hidden=false;box.className='eres '+cfg.cls;
+  document.querySelectorAll('.e-dest').forEach(b=>b.setAttribute('aria-pressed',b.dataset.dest===dest));
+  const band='<div class="e-band">Hacia '+dest+'</div>',co=i=>'<p class="e-co"><b>'+i.co+'</b>'+(i.x?'<small>'+i.x+'</small>':'')+'</p>';
+  let msg,waText='';
+  if(L.length){
+    const n=L[0],i=info(n.r,n.x,dow),when=n.diff?'Faltan '+spanDur(n.diff):'¡Sale ahora mismo!';
+    const seen=new Set([n.x]),later=[];
+    L.forEach(o=>{if(!seen.has(o.x)&&later.length<3){seen.add(o.x);later.push(o)}});
+    body.innerHTML=band+'<div class="e-main"><p class="e-lbl">Próximo bus a las</p><p class="e-time">'+n.x+'<span> hrs</span></p><p class="e-when">'+when+'</p>'+co(i)+'</div>'
+      +(later.length?'<div class="e-later"><p>Después salen:</p><ul>'+later.map(o=>'<li><b>'+o.x+'</b><small>'+info(o.r,o.x,dow).co+'</small></li>').join('')+'</ul></div>':'');
+    msg='El próximo bus a '+dest+' sale a las '+say(n.x)+'. '+(n.diff?when:'Sale ahora mismo')+'. Empresa '+i.co+'.';
+    waText='Hola, el próximo bus de Cholchol a '+dest+' sale a las '+n.x+' hrs ('+when+'). Empresa: '+i.co+'.';
+  }else{
+    const t=tomorrowFirst(dest);
+    if(t){const i=info(t.b.r,t.b.x,t.dow);
+      body.innerHTML=band+'<div class="e-main"><p class="e-none">Hoy ya no quedan más buses</p><p class="e-lbl">Mañana ('+DN[t.type]+') el primer bus sale a las</p><p class="e-time">'+t.b.x+'<span> hrs</span></p>'+co(i)+'</div>';
+      msg='Hoy ya no quedan más buses hacia '+dest+'. Mañana el primer bus sale a las '+say(t.b.x)+'. Empresa '+i.co+'.';
+      waText='Hola, hoy ya no quedan buses de Cholchol a '+dest+'. Mañana el primer bus sale a las '+t.b.x+' hrs. Empresa: '+i.co+'.';
+    }else{
+      body.innerHTML=band+'<div class="e-main"><p class="e-none">No quedan más buses hoy hacia '+dest+' desde Cholchol.</p></div>';
+      msg='No quedan más buses hoy hacia '+dest+' desde Cholchol.';
+    }
+  }
+  box.dataset.msg=msg;
+  wa.hidden=!waText;if(waText)wa.href='https://api.whatsapp.com/send?text='+encodeURIComponent(waText);
+  if(user){speakText(msg);box.focus({preventScroll:true});box.scrollIntoView({behavior:'smooth',block:'start'})}
+}
+function refreshElder(){if(elderDest&&!$('viewElder').hidden)showElder(elderDest,false)}
+
+document.querySelectorAll('.e-dest').forEach(b=>{b.onclick=()=>showElder(b.dataset.dest,true)});
+$('elderReplay').onclick=()=>speakText($('elderResult').dataset.msg||'',true);
+$('speakWelcome').onclick=()=>speakText('Por favor, toca el botón del lugar al que deseas viajar: Temuco, Nueva Imperial o Galvarino.',true);
+
+const setVoiceBtn=()=>{const b=$('elderVoice');b.textContent=voiceOn?'🔊 Voz: Sí':'🔇 Voz: No';b.setAttribute('aria-pressed',voiceOn)};
+$('elderVoice').onclick=()=>{voiceOn=!voiceOn;if(!voiceOn&&hasVoice)window.speechSynthesis.cancel();setVoiceBtn()};
+function setSize(i){sizeI=i;$('viewElder').style.setProperty('--es',SZ[i][0]);$('elderSize').textContent='🔠 Letra: '+SZ[i][1];try{localStorage.setItem('elderSz',i)}catch(e){}}
+$('elderSize').onclick=()=>setSize((sizeI+1)%SZ.length);
+try{const z=+localStorage.getItem('elderSz');setSize(SZ[z]?z:0)}catch(e){setSize(0)}
+if(!hasVoice)['elderVoice','speakWelcome','elderReplay'].forEach(id=>$(id).hidden=true);
 
 setToday();view=real;render();tick();setInterval(tick,1000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden){lastMin=-1;tick()}});
