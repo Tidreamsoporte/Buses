@@ -142,6 +142,7 @@ body:has(.modal:not([hidden])){overflow:hidden}
 .e-wa{background:#15803d}.e-wa:hover{background:#166534}
 @media(min-width:640px){.e-act{grid-template-columns:1fr 1fr}}
 </style>
+<script data-goatcounter="https://tidreams.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 </head>
 <body>
 
@@ -368,6 +369,7 @@ function pickMode(mode){
   $('viewPublic').hidden=mode!=='public';
   $('viewElder').hidden=mode!=='elder';
   window.scrollTo(0,0);
+  try{if(window.goatcounter&&goatcounter.count)goatcounter.count({path:'vista-'+mode,title:'Vista '+mode,event:true})}catch(e){}
   if(mode==='elder')speakText('Bienvenido. Toca el botón del lugar al que deseas viajar para escuchar el próximo horario.');
 }
 $('pickPub').onclick=()=>pickMode('public');
