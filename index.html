@@ -8,6 +8,7 @@
 <title>Horarios de Buses Interurbanos · Cholchol</title>
 <!-- Configuración PWA -->
 <link rel="manifest" href="manifest.webmanifest">
+<script>try{var t=localStorage.getItem("bus_theme");if(t?t==="dark":matchMedia("(prefers-color-scheme: dark)").matches)document.documentElement.setAttribute("data-theme","dark")}catch(e){}</script>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2064%2064%22%3E%3Crect%20width=%2264%22%20height=%2264%22%20rx=%2214%22%20fill=%22%230f766e%22/%3E%3Crect%20x=%2213%22%20y=%2210%22%20width=%2238%22%20height=%2238%22%20rx=%227%22%20fill=%22%23fff%22/%3E%3Crect%20x=%2217%22%20y=%2215%22%20width=%2230%22%20height=%2215%22%20rx=%223%22%20fill=%22%230f766e%22/%3E%3Crect%20x=%2231%22%20y=%2215%22%20width=%222%22%20height=%2215%22%20fill=%22%23fff%22/%3E%3Crect%20x=%2213%22%20y=%2235%22%20width=%2238%22%20height=%224%22%20fill=%22%23fde047%22/%3E%3Ccircle%20cx=%2221%22%20cy=%2244%22%20r=%222.6%22%20fill=%22%230f766e%22/%3E%3Ccircle%20cx=%2243%22%20cy=%2244%22%20r=%222.6%22%20fill=%22%230f766e%22/%3E%3Crect%20x=%2217%22%20y=%2246%22%20width=%229%22%20height=%229%22%20rx=%222.5%22%20fill=%22%230b1f2a%22/%3E%3Crect%20x=%2238%22%20y=%2246%22%20width=%229%22%20height=%229%22%20rx=%222.5%22%20fill=%22%230b1f2a%22/%3E%3C/svg%3E">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -178,6 +179,67 @@ body:has(.modal:not([hidden])){overflow:hidden}
 .i-yes:hover{background:#115e59}
 @media(prefers-reduced-motion:no-preference){.install:not([hidden]){animation:inUp .35s ease-out}}
 @keyframes inUp{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}
+/* ===== Modo oscuro ===== */
+.themebar{display:flex;justify-content:flex-end;align-items:center;gap:10px;font-size:14px;font-weight:700;color:var(--mut)}
+.sw{position:relative;display:inline-block;padding:6px 0}
+.sw input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer;z-index:1}
+.sw-tr{display:block;position:relative;width:58px;height:32px;border-radius:99px;background:#cbd5e1;transition:background .2s}
+.sw-kn{position:absolute;top:3px;left:3px;width:26px;height:26px;border-radius:50%;background:#fff;box-shadow:0 1px 4px #0004;display:grid;place-items:center;font-size:15px;line-height:1;transition:transform .2s}
+.sw-kn::before{content:"☀️"}
+.sw input:checked+.sw-tr{background:#0f766e}
+.sw input:checked+.sw-tr .sw-kn{transform:translateX(26px)}
+.sw input:checked+.sw-tr .sw-kn::before{content:"🌙"}
+.sw input:focus-visible+.sw-tr{outline:3px solid #f59e0b;outline-offset:2px}
+@media(prefers-reduced-motion:reduce){.sw-tr,.sw-kn{transition:none}}
+[data-theme=dark]{--ink:#e5e7eb;--mut:#94a3b8}
+[data-theme=dark]{color-scheme:dark}
+[data-theme=dark] body{background:#0b1220}
+[data-theme=dark] .card{background:#111c2e;border-color:#1f2d44;box-shadow:none}
+[data-theme=dark] .tip,[data-theme=dark] .nxb,[data-theme=dark] .e-note,[data-theme=dark] .res.warn,[data-theme=dark] .warnbox{background:#2b2410;border-color:#a16207;color:#fde68a}
+[data-theme=dark] .nxb.no{background:#1b2638;border-color:#2a3a52;color:#cbd5e1}
+[data-theme=dark] .res.ok{background:#05291f;border-color:#047857}
+[data-theme=dark] .res.inf{background:#0b2438;border-color:#0369a1}
+[data-theme=dark] .d-to{--c:#34d399;--cb:#0b3b2e}
+[data-theme=dark] .d-from{--c:#60a5fa;--cb:#10284f}
+[data-theme=dark] .d-other{--c:#cbd5e1;--cb:#273449}
+[data-theme=dark] .d-chol{--c:#2dd4bf;--cb:#0b3a38}
+[data-theme=dark] .d-imperial{--c:#a78bfa;--cb:#2a1d57}
+[data-theme=dark] .d-galvarino,[data-theme=dark] #viewElder .d-galvarino{--c:#fbbf24;--cb:#3d2a08}
+[data-theme=dark] .d-lautaro{--c:#9ca3af;--cb:#2a303b}
+[data-theme=dark] .row{background:#16233a;color:var(--ink)}
+[data-theme=dark] .pill,[data-theme=dark] .t.nx,[data-theme=dark] .t.nx small,[data-theme=dark] .e-band{color:#06121f}
+[data-theme=dark] .e-dest[aria-pressed="true"],[data-theme=dark] .e-dest[aria-pressed="true"] small{color:#06121f}
+[data-theme=dark] .e-dest .ic{color:#06121f}
+[data-theme=dark] .e-dest[aria-pressed="true"] .ic{background:#06121f;color:var(--c)}
+[data-theme=dark] .e-dest small,[data-theme=dark] .t small,[data-theme=dark] .e-later li small,[data-theme=dark] .e-later p{color:#cbd5e1}
+[data-theme=dark] .sec+.sec{border-top-color:#1f2d44}
+[data-theme=dark] .opt,[data-theme=dark] .ghost{border-color:#2a3a52;background:#16233a;color:#e2e8f0}
+[data-theme=dark] .opt:hover{background:#1d2c47}
+[data-theme=dark] .opt.on{background:#0f766e;border-color:#14b8a6;color:#fff}
+[data-theme=dark] .opt.dir{--c:#5eead4;background:transparent;border-color:#5eead4;color:#5eead4}
+[data-theme=dark] .opt.dir.on{background:#0f766e;color:#fff}
+[data-theme=dark] .qr input{background:#0f1a2b;border-color:#2a3a52;color:var(--ink)}
+[data-theme=dark] .t.ps{background:#1b2638;border-color:#1b2638;color:#64748b}
+[data-theme=dark] .t.ps small{color:#64748b}
+[data-theme=dark] .more{background:#111c2e;border-color:#334155;color:#cbd5e1}
+[data-theme=dark] .eres{background:#111c2e}
+[data-theme=dark] .e-later{background:#0f1a2b;border-top-color:#1f2d44}
+[data-theme=dark] .e-q2{border-top-color:#334155}
+[data-theme=dark] .box{background:#111c2e}
+[data-theme=dark] .box img{background:#fff;border-radius:14px;padding:6px 12px}
+[data-theme=dark] .warnbox .wt{color:#fb923c}
+[data-theme=dark] .warnbox .wb{color:#cbd5e1}
+[data-theme=dark] #rt{color:#5eead4!important}
+[data-theme=dark] .pick-btn{background:#16233a;border-color:#334155}
+[data-theme=dark] .pick-btn:hover,[data-theme=dark] .pick-btn:focus-visible{background:#0f2e2c;border-color:#14b8a6}
+[data-theme=dark] .pick-btn .ic{background:#0f3d3a}
+[data-theme=dark] .pick-btn.elder .ic{background:#0c2a44;border-color:#0369a1}
+[data-theme=dark] .b3{background:#334155}
+[data-theme=dark] .b4{background:#273449;color:#e2e8f0}
+[data-theme=dark] .install{background:#111c2e;border-color:#1f2d44}
+[data-theme=dark] .i-no{background:#16233a;border-color:#334155;color:#e2e8f0}
+[data-theme=dark] .i-no:hover{background:#1d2c47}
+[data-theme=dark] footer{border-top:1px solid #1f2d44}
 </style>
 </head>
 <body>
@@ -219,6 +281,7 @@ body:has(.modal:not([hidden])){overflow:hidden}
 </div></header>
 
 <main class="w">
+  <div class="themebar"><span id="themeLbl">Modo oscuro</span><label class="sw"><input type="checkbox" id="themeSw" role="switch" aria-labelledby="themeLbl"><span class="sw-tr"><span class="sw-kn" aria-hidden="true"></span></span></label></div>
   <!-- PRIMER MENSAJE DE INFORMACIÓN -->
   <section class="card tip"><b>🕒 Llega con anticipación.</b> Si el bus dice una hora, puede salir justo a tiempo, un poco antes o un poco después según el tráfico.</section>
 
@@ -328,7 +391,7 @@ const R=[
  d:{weekday:T('08:00 08:50 09:40 10:00 10:30 11:00 11:30 12:00 12:30 13:00 13:40 14:00 14:30 15:30 16:00 16:40 17:30')},
  dw:{'13:40':[2,4],'15:30':[1,3,5]},
  n:N('08:00=Nehuenmapu|08:50=Barbosa|09:40=Nehuenmapu|10:00=Barbosa|10:30=Barbosa|11:00=Nehuenmapu|11:30=Barbosa|12:00=Nehuenmapu|12:30=Barbosa|13:00=Nehuenmapu|13:40=Nehuenmapu (Martes y Jueves)|14:00=Nehuenmapu|14:30=Barbosa|15:30=Barbosa (Lun, Mié, Vie)|16:00=Nehuenmapu|16:40=Barbosa|17:30=Nehuenmapu')},
-{id:'CG',st:['Cholchol','Galvarino'],co:'Huincabus',via:'',d:{
+{id:'CG',st:['Cholchol','Galvarino'],co:'Huincabus',via:'bus que viene de Temuco, sigue a Galvarino',d:{
  weekday:T('07:50 09:00 10:00 11:00 12:00 13:00 14:00 16:00 16:30 17:15 18:15 18:45 19:45 20:00 21:15'),
  saturday:T('11:00 13:00 14:00 16:00 17:15 18:15 20:30'),sunday:T('11:00 14:00 20:30')}},
 {id:'TC',st:['Temuco','Cholchol'],co:'Huincabus',via:'Termina en Cholchol',minus:'TG',d:{
@@ -630,6 +693,18 @@ else if(isIOSSafari){ // iOS no tiene botón de instalar: se explica el paso man
   $('installLater').textContent='Entendido';
   showInstall();
 }
+
+// Modo oscuro: respeta lo que elija la persona; si no ha elegido, sigue el modo del teléfono/computador
+const THEME_KEY='bus_theme';
+function getTheme(){try{return localStorage.getItem(THEME_KEY)}catch(e){return null}}
+function applyTheme(dark){document.documentElement.setAttribute('data-theme',dark?'dark':'light');$('themeSw').checked=dark}
+(function(){
+  const mq=matchMedia('(prefers-color-scheme: dark)'),saved=getTheme();
+  applyTheme(saved?saved==='dark':mq.matches);
+  $('themeSw').addEventListener('change',e=>{const dark=e.target.checked;applyTheme(dark);try{localStorage.setItem(THEME_KEY,dark?'dark':'light')}catch(x){}});
+  const onSys=e=>{if(!getTheme())applyTheme(e.matches)};
+  if(mq.addEventListener)mq.addEventListener('change',onSys);else if(mq.addListener)mq.addListener(onSys);
+})();
 
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
   navigator.serviceWorker.register('sw.js').catch(() => {});
