@@ -26,10 +26,14 @@ button{font:inherit;cursor:pointer;min-height:44px}
 .w{max-width:56rem;margin:0 auto;padding:0 16px;width:100%}
 header{background:linear-gradient(135deg,#065f46,#0f766e 50%,#0369a1);color:#fff;position:sticky;top:0;z-index:50;box-shadow:0 4px 18px #0003}
 .hd{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0}
-.hd img{height:85px;max-width:70%;object-fit:contain}
-.clk{background:#0003;border:1px solid #fff3;border-radius:14px;padding:6px 12px;text-align:right}
+.hd img{height:85px;max-width:70%;min-width:0;flex:0 1 auto;object-fit:contain}
+.clk{background:#0003;border:1px solid #fff3;border-radius:14px;padding:6px 12px;text-align:right;flex:0 0 auto;white-space:nowrap}
 .clk small{display:block;font-size:12px;color:#99f6e4;font-weight:700}
-.clk b{font-size:18px;color:#fde047;font-variant-numeric:tabular-nums}
+.clk b{display:block;font-size:18px;color:#fde047;font-variant-numeric:tabular-nums;white-space:nowrap}
+.clk .dt{display:block;font-size:11px;letter-spacing:.06em;color:#cbd5e1;font-weight:700;text-transform:uppercase;white-space:nowrap}
+.live{display:inline-flex;align-items:center;gap:8px;background:#22c55e;color:#fff;border-radius:99px;padding:5px 14px;font-size:13px;font-weight:800;letter-spacing:.04em;box-shadow:0 2px 8px #0003}
+.live i{width:9px;height:9px;border-radius:50%;background:#fff;display:inline-block}
+@media(prefers-reduced-motion:no-preference){.live i{animation:livePulse 1.2s ease-in-out infinite}@keyframes livePulse{0%,100%{opacity:1;box-shadow:0 0 0 0 #fffc}50%{opacity:.35;box-shadow:0 0 0 6px #fff0}}}
 main{flex:1;padding:16px 16px 32px;display:grid;gap:16px;align-content:start}
 .card{background:#fff;border-radius:18px;padding:18px;border:1px solid #e2e8f0;box-shadow:0 1px 3px #0f172a14}
 .tip{background:#fffbeb;border:2px solid #fcd34d;color:#78350f;font-size:14px}
@@ -44,6 +48,7 @@ main{flex:1;padding:16px 16px 32px;display:grid;gap:16px;align-content:start}
 .d-chol{--c:#0d9488;--cb:#ccfbf1}
 .d-imperial{--c:#7c3aed;--cb:#ede9fe}
 .d-galvarino{--c:#d97706;--cb:#fef3c7}
+.d-lautaro{--c:#6b7280;--cb:#e5e7eb}
 .row{background:#fff;color:var(--ink);border-left:6px solid var(--c);border-radius:12px;padding:10px 12px;display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px}
 .row small,.via{color:var(--mut);font-size:13px}
 .co{font-weight:700;color:var(--c)}
@@ -91,6 +96,8 @@ footer{background:#0f172a;color:#94a3b8;text-align:center;padding:20px 16px;font
 body:has(.modal:not([hidden])){overflow:hidden}
 .box{max-height:calc(100vh - 32px);overflow-y:auto}
 
+.warnbox .wt{display:block;color:#c2410c;font-size:16px;margin-bottom:8px}
+.warnbox .wb{margin:0;color:#475569;font-size:14px;line-height:1.55}
 .pick{max-width:460px}
 .pick h3{font-size:1.35rem;line-height:1.25}
 .pick .hint{margin:6px 0 0}
@@ -98,7 +105,7 @@ body:has(.modal:not([hidden])){overflow:hidden}
 .pick-btn{display:flex;align-items:center;gap:14px;width:100%;text-align:left;min-height:92px;background:#fff;border:3px solid #cbd5e1;border-radius:18px;padding:14px 16px;color:var(--ink);transition:border-color .15s,background .15s}
 .pick-btn:hover,.pick-btn:focus-visible{border-color:var(--brand);background:#f0fdfa}
 .pick-btn .ic{flex:none;width:58px;height:58px;border-radius:16px;background:#ccfbf1;display:grid;place-items:center;font-size:30px}
-.pick-btn.elder .ic{background:#fef3c7}
+.pick-btn.elder .ic{display:flex;align-items:center;justify-content:center;white-space:nowrap;line-height:1;background:#e0f2fe;border:2px solid #7dd3fc;width:92px;font-size:26px;letter-spacing:0;overflow:hidden}
 .pick-btn b{display:block;font-size:1.2rem}
 .pick-btn small{display:block;color:var(--mut);font-size:.9rem;line-height:1.3;margin-top:2px}
 
@@ -121,6 +128,7 @@ body:has(.modal:not([hidden])){overflow:hidden}
   .e-opts{grid-template-columns:repeat(3,1fr)}
   .e-dest{flex-direction:column;text-align:center;border-left:3px solid transparent;border-top:12px solid var(--c);padding:16px 12px}
 }
+.e-q2{margin-top:22px;padding-top:18px;border-top:3px dashed #cbd5e1}
 .e-dest[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:#fff}
 .e-dest[aria-pressed="true"] small{color:#fff}
 .e-dest[aria-pressed="true"] .ic{background:#fff;color:var(--c)}
@@ -141,6 +149,11 @@ body:has(.modal:not([hidden])){overflow:hidden}
 .e-later ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
 .e-later li{background:var(--cb);color:var(--c);border-radius:14px;padding:6px 14px;text-align:center;line-height:1.2}
 .e-later li b{font-size:1.2em;display:block}.e-later li small{font-size:.7em;color:#334155}
+.e-note{margin:0;padding:12px 16px;background:#fffbeb;color:#78350f;border-bottom:2px solid #fcd34d;font-weight:700;font-size:.9em;text-align:center;line-height:1.35}
+.e-arr{border-top:4px solid var(--c)}
+.e-arr+.e-arr{margin-top:6px}
+.e-arr-h{background:var(--cb);color:var(--ink);padding:10px 16px;font-weight:800;font-size:1.1em;border-left:12px solid var(--c)}
+.e-arr .e-time{font-size:2.8em}
 .e-act{display:grid;gap:10px;padding:14px 16px 16px}
 .e-big{display:flex;align-items:center;justify-content:center;gap:10px;min-height:58px;border:0;border-radius:16px;padding:10px 16px;font-weight:800;font-size:1em;color:#fff;text-decoration:none;text-align:center}
 .e-re{background:var(--brand)}.e-re:hover{background:#115e59}
@@ -171,8 +184,8 @@ body:has(.modal:not([hidden])){overflow:hidden}
 
 <div id="welcome" class="modal" role="dialog" aria-modal="true" aria-labelledby="wt">
   <div class="box">
-    <img src="https://raw.githubusercontent.com/Tidreamsoporte/Buses/refs/heads/main/1.png" alt="Tidreamsoporte" style="height:64px" onerror="this.hidden=true">
-    <div class="warnbox"><b id="wt">⚠️ Aviso importante</b><br>Esta es una aplicación informativa independiente. Los horarios provienen de las pizarras y ventanillas oficiales. No nos hacemos responsables por imprevistos o cambios de las empresas operadoras (Huincabus, Barbosa, Turischol, Nehuenmapu).</div>
+    <img src="https://raw.githubusercontent.com/Tidreamsoporte/Buses/refs/heads/main/1.png" alt="Tidreamsoporte" style="height:64px" onerror="var f=['https://cdn.jsdelivr.net/gh/Tidreamsoporte/Buses@main/1.png','1.png'],i=+this.dataset.i||0;if(i<f.length){this.dataset.i=i+1;this.src=f[i]}else{this.hidden=true}">
+    <div class="warnbox"><b id="wt" class="wt">⚠️ Aviso importante</b><p class="wb">Esta es una aplicación informativa independiente. Los horarios provienen de las pizarras y ventanillas oficiales. No nos hacemos responsables por imprevistos o cambios de las empresas operadoras (Huincabus, Barbosa, Turischol, Nehuenmapu).</p></div>
     <button id="ok" class="bt b1">Entendido y continuar</button>
   </div>
 </div>
@@ -183,7 +196,7 @@ body:has(.modal:not([hidden])){overflow:hidden}
     <p class="hint">Elige una vista. Si más adelante quieres cambiarla, actualiza la página.</p>
     <div class="pick-opts">
       <button id="pickPub" class="pick-btn"><span class="ic" aria-hidden="true">📱</span><span><b>Todo público</b><small>Buscador, filtros y todos los horarios del día</small></span></button>
-      <button id="pickElder" class="pick-btn elder"><span class="ic" aria-hidden="true">👴</span><span><b>Adulto mayor</b><small>Botones grandes, letra grande y una voz que dice el próximo bus</small></span></button>
+      <button id="pickElder" class="pick-btn elder"><span class="ic" aria-hidden="true">👴👵</span><span><b>Adulto mayor</b><small>Botones grandes, letra grande y una voz que dice el próximo bus</small></span></button>
     </div>
   </div>
 </div>
@@ -202,7 +215,7 @@ body:has(.modal:not([hidden])){overflow:hidden}
 
 <header><div class="w hd">
   <img src="busintercomunal.png" alt="Buses interurbanos" onerror="this.hidden=true">
-  <div class="clk"><small>Hora actual</small><b id="clock">--:--:-- hrs</b></div>
+  <div class="clk"><small>Hora actual</small><span class="dt" id="date">---, -- ---</span><b id="clock">--:--:-- hrs</b></div>
 </div></header>
 
 <main class="w">
@@ -227,6 +240,10 @@ body:has(.modal:not([hidden])){overflow:hidden}
         <button class="e-dest d-imperial" data-dest="Nueva Imperial" aria-pressed="false"><span class="ic" aria-hidden="true">➔</span><span><b>Nueva Imperial</b><small>Sale desde Cholchol</small></span></button>
         <button class="e-dest d-galvarino" data-dest="Galvarino" aria-pressed="false"><span class="ic" aria-hidden="true">➔</span><span><b>Galvarino</b><small>Sale desde Cholchol</small></span></button>
       </div>
+      <p class="e-q e-q2" id="eq2">¿O quieres saber qué buses llegan a Cholchol?</p>
+      <div class="e-opts" role="group" aria-labelledby="eq2">
+        <button class="e-dest d-chol" data-dest="Cholchol" aria-pressed="false"><span class="ic" aria-hidden="true">↓</span><span><b>Cholchol</b><small>Buses que llegan a Cholchol</small></span></button>
+      </div>
       <div id="elderResult" class="eres" tabindex="-1" hidden>
         <div id="elderBody"></div>
         <div class="e-act">
@@ -240,7 +257,7 @@ body:has(.modal:not([hidden])){overflow:hidden}
   <!-- VISTA TODO PÚBLICO -->
   <div id="viewPublic">
     <section class="card hero" aria-live="polite">
-      <div class="top"><span class="chip">✨ Detección automática</span><span class="chip" id="badge"></span></div>
+      <div class="top"><span class="live" role="status" aria-label="En vivo"><i aria-hidden="true"></i>EN LINEA</span><span class="chip" id="badge"></span></div>
       <p id="nbTitle"></p>
       <div id="nbMain"></div>
       <div id="nbSub"></div>
@@ -258,10 +275,6 @@ body:has(.modal:not([hidden])){overflow:hidden}
     <div id="qres" hidden></div>
 
     <section aria-label="Horarios" style="margin-top:16px">
-      <div class="card" style="margin-bottom:14px">
-        <p class="step" style="margin-bottom:8px">Mostrar buses que…</p>
-        <div class="opts" id="dirs"></div>
-      </div>
       <div id="routes"></div>
     </section>
   </div>
@@ -325,6 +338,9 @@ const R=[
 {id:'TG',st:['Temuco','Cholchol','Galvarino'],co:'Huincabus',via:'Mismo bus: pasa por Cholchol y sigue a Galvarino',d:{
  weekday:T('06:50 08:00 09:00 10:00 11:00 12:00 13:00 15:00 15:30 16:15 17:15 17:45 18:45 19:00 20:15'),
  saturday:T('10:00 12:00 13:00 15:00 16:15 17:15 19:30'),sunday:T('10:00 13:00 19:30')}},
+{id:'GC',st:['Galvarino','Cholchol','Temuco'],co:'Huincabus',via:'Mismo bus: pasa por Cholchol y sigue a Temuco',d:{
+ weekday:T('06:10 07:10 08:00 09:00 10:00 11:00 12:30 14:00 15:15 16:30 17:15 18:30'),
+ saturday:T('08:00 10:00 12:30 14:30 17:45'),sunday:T('08:30 12:30 17:45')}},
 {id:'GLT',st:['Galvarino','Lautaro','Temuco'],co:'Huincabus',via:'Vía Lautaro',n:{'07:00':'Solo llega a Lautaro'},d:{
  weekday:T('06:30 07:00 08:30 12:00 17:00'),saturday:['08:30'],sunday:['08:30']}},
 {id:'TLG',st:['Temuco','Lautaro','Galvarino'],co:'Huincabus',via:'Vía Lautaro',n:{'09:00':'Lautaro a Galvarino'},d:{
@@ -360,7 +376,7 @@ function visible(dw){const dow=dw||vdow();return R.filter(r=>r.d[view]).map(r=>{
   let ts=r.d[view];
   if(r.minus)ts=ts.filter(t=>!(R.find(x=>x.id===r.minus).d[view]||[]).includes(t));
   if(r.dw)ts=ts.filter(t=>!r.dw[t]||r.dw[t].includes(dow));
-  return Object.assign({},r,{ts:ts,dir:dirOf(r.st)})
+  return Object.assign({},r,{ts:ts,dir:dirOf(r.st),cl:(r.id==='GLT'||r.id==='TLG')?'lautaro':dirOf(r.st)})
 }).filter(r=>(org==='ALL'||r.st[0]===org)&&(dst==='ALL'||r.st.slice(1).includes(dst))&&(dirF==='ALL'||r.dir===dirF)&&r.ts.length)}
 
 function setToday(){const n=new Date();real=dayType(n);
@@ -369,8 +385,7 @@ function setToday(){const n=new Date();real=dayType(n);
 function opts(id,arr,cur,k){$(id).innerHTML=arr.map(a=>'<button class="opt'+(a[0]===cur?' on':'')+'" aria-pressed="'+(a[0]===cur)+'" data-k="'+k+'" data-v="'+a[0]+'">'+a[1]+(k==='day'&&a[0]===real?'<span class="hoy">Hoy</span>':'')+'</button>').join('')}
 function filters(){const A=[['ALL','Cualquiera']];
   opts('o1',A.concat(ORG.map(x=>[x,x])),org,'org');opts('o2',A.concat(DST.map(x=>[x,x])),dst,'dst');
-  opts('o3',Object.keys(DN).map(k=>[k,DN[k]]),view,'day');
-  $('dirs').innerHTML=[['ALL','Todos',''],['to','↗ Van a Temuco','d-to'],['from','↙ Vienen de Temuco','d-from'],['chol','➔ Van a Cholchol','d-chol'],['imperial','➔ Van a Imperial','d-imperial'],['galvarino','➔ Van a Galvarino','d-galvarino']].map(a=>'<button class="opt dir '+a[2]+(a[0]===dirF?' on':'')+'" aria-pressed="'+(a[0]===dirF)+'" data-k="dir" data-v="'+a[0]+'">'+a[1]+'</button>').join('')}
+  opts('o3',Object.keys(DN).map(k=>[k,DN[k]]),view,'day');}
 
 function banner(){const t=$('nbTitle'),mt=$('nbMain'),sub=$('nbSub');
   if(view!==real){t.textContent='Estás viendo otro día';mt.innerHTML='<span class="big sm">'+DN[view]+'</span>';sub.innerHTML='<p class="soft">El cálculo en tiempo real solo funciona con el horario de hoy.</p>';return}
@@ -381,7 +396,7 @@ function banner(){const t=$('nbTitle'),mt=$('nbMain'),sub=$('nbSub');
   const first=L.reduce((a,b)=>m(b.x)<m(a.x)?b:a).x,d=m(first)-cur;
   mt.innerHTML='<span class="big">'+first+' hrs</span><span class="eta">'+(d?fmt(d):'¡Sale ahora!')+'</span>';
   sub.innerHTML=L.filter(e=>e.x===first).map(e=>{const i=info(e.r,e.x,dow);
-    return '<div class="row d-'+e.r.dir+'">'+pill(e.r.dir)+'<b>'+e.r.st.join(' ➔ ')+'</b><span class="co">'+i.co+'</span><small>'+(i.x||e.r.via)+'</small></div>'}).join('')}
+    return '<div class="row d-'+e.r.cl+'">'+pill(e.r.dir)+'<b>'+e.r.st.join(' ➔ ')+'</b><span class="co">'+i.co+'</span><small>'+(i.x||e.r.via)+'</small></div>'}).join('')}
 
 function cards(){const rs=visible(),cur=nowMin(),today=view===real,dow=vdow();
   $('routes').innerHTML=rs.length?rs.map(r=>{
@@ -389,7 +404,7 @@ function cards(){const rs=visible(),cur=nowMin(),today=view===real,dow=vdow();
     const st=today?(nx?'<div class="nxb">Próximo: <b>'+nx+'</b> ('+fmt(m(nx)-cur)+')</div>':'<div class="nxb no">Sin más salidas hoy</div>'):'<div class="nxb no">Horario '+DN[view]+'</div>';
     const chips=list.map(x=>{const i=info(r,x,dow),p=today&&m(x)<cur;
       return '<button class="t'+(x===nx?' nx':'')+(p?' ps':'')+'" data-r="'+r.id+'" data-t="'+x+'" title="'+(i.co+' '+i.x).trim()+'" aria-label="Recordatorio para las '+x+'"><b>'+x+'</b>'+(r.multi?'<small>'+i.co+'</small>':i.x?'<small>'+i.x+'</small>':'')+'</button>'}).join('');
-    return '<article class="card rt d-'+r.dir+'"><div class="rh"><div>'+pill(r.dir)+'<h3>'+r.st.join(' ➔ ')+'</h3><div class="via">'+r.co+(r.via?' · '+r.via:'')+'</div></div>'+st+'</div>'
+    return '<article class="card rt d-'+r.cl+'"><div class="rh"><div>'+pill(r.dir)+'<h3>'+r.st.join(' ➔ ')+'</h3><div class="via">'+r.co+(r.via?' · '+r.via:'')+'</div></div>'+st+'</div>'
       +'<p class="hint">'+(isO||!today?'Salidas del día':'Próximas salidas')+' · toca una hora para crear un recordatorio</p>'
       +(chips?'<div class="g">'+chips+'</div>':'')
       +(r.ts.length>short.length||isO?'<button class="more" data-o="'+r.id+'">'+(isO?'Mostrar menos':'Ver las '+r.ts.length+' salidas del día')+'</button>':'')+'</article>'}).join('')
@@ -397,6 +412,7 @@ function cards(){const rs=visible(),cur=nowMin(),today=view===real,dow=vdow();
 
 function render(){filters();banner();cards();refreshElder()}
 function tick(){const n=new Date();$('clock').textContent=n.toLocaleTimeString('es-CL',{hour12:false})+' hrs';
+  const dEl=$('date');if(dEl)dEl.textContent=['DOM','LUN','MAR','MIÉ','JUE','VIE','SÁB'][n.getDay()]+', '+n.getDate()+' '+['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'][n.getMonth()];
   const k=n.getHours()*60+n.getMinutes();if(k===lastMin)return;lastMin=k;
   if(dayType(n)!==real){setToday();view=real;render();return}
   banner();cards();refreshElder()}
@@ -445,14 +461,14 @@ $('qb').onclick=()=>{const v=$('tq').value,b=$('qres');b.hidden=false;
   if(!v){b.className='res warn';b.innerHTML='<p>Ingresa una hora para consultar.</p>';return}
   const q=m(v),dow=vdow(),ex=[],cl=[];
   visible().forEach(r=>r.ts.forEach(x=>{const d=m(x)-q;if(d===0)ex.push({r:r,x:x,d:d});else if(d>0&&d<=30)cl.push({r:r,x:x,d:d})}));
-  const li=a=>a.map(o=>{const i=info(o.r,o.x,dow);return '<li class="d-'+o.r.dir+'"><b>'+o.x+'</b>'+(o.d?' (+'+o.d+' min)':'')+' · '+o.r.st.join(' ➔ ')+' · '+i.co+' '+i.x+'</li>'}).join('');
+  const li=a=>a.map(o=>{const i=info(o.r,o.x,dow);return '<li class="d-'+o.r.cl+'"><b>'+o.x+'</b>'+(o.d?' (+'+o.d+' min)':'')+' · '+o.r.st.join(' ➔ ')+' · '+i.co+' '+i.x+'</li>'}).join('');
   b.className='res '+(ex.length?'ok':cl.length?'inf':'warn');
   b.innerHTML=ex.length?'<p><b>¡Sí!</b> ('+DN[view]+') pasa bus a las '+v+' hrs:</p><ul>'+li(ex)+'</ul>'
    :cl.length?'<p>No hay bus exacto a las '+v+' hrs, pero salen pronto:</p><ul>'+li(cl)+'</ul>'
    :'<p>No hay buses cerca de las '+v+' hrs ('+DN[view]+').</p>'};
 
 let elderDest=null,voiceOn=true,sizeI=0;
-const ELD={'Temuco':{cls:'d-to'},'Nueva Imperial':{cls:'d-imperial'},'Galvarino':{cls:'d-galvarino'}};
+const ELD={'Temuco':{cls:'d-to'},'Nueva Imperial':{cls:'d-imperial'},'Galvarino':{cls:'d-galvarino'},'Cholchol':{cls:'d-chol'}};
 const SZ=[[1,'Normal'],[1.2,'Grande'],[1.4,'Muy grande']];
 const plural=(n,a,b)=>n+' '+(n===1?a:b);
 const spanDur=d=>d<60?plural(d,'minuto','minutos'):plural(Math.floor(d/60),'hora','horas')+(d%60?' y '+plural(d%60,'minuto','minutos'):'');
@@ -472,12 +488,13 @@ function speakText(txt,force){
 function elderList(dest,rows,from){const L=[];
   rows.forEach(r=>{if(r.st[0]==='Cholchol'&&r.st.slice(1).includes(dest))r.ts.forEach(x=>{if(m(x)>=from)L.push({r:r,x:x,diff:m(x)-from})})});
   return L.sort((a,b)=>a.diff-b.diff)}
-function tomorrowFirst(dest){const d=new Date();d.setDate(d.getDate()+1);
+function tomorrowFirst(dest,fn){const d=new Date();d.setDate(d.getDate()+1);
   const type=dayType(d),dow=type==='weekday'?d.getDay():1,keep=view;view=type;
-  try{const L=elderList(dest,visible(dow),0);return L.length?{b:L[0],type:type,dow:dow}:null}finally{view=keep}}
+  try{const L=(fn||elderList)(dest,visible(dow),0);return L.length?{b:L[0],type:type,dow:dow}:null}finally{view=keep}}
 
 function showElder(dest,user){
   elderDest=dest;
+  if(dest==='Cholchol'){showArrivals(user);return}
   const cfg=ELD[dest],cur=nowMin(),dow=vdow(),L=elderList(dest,visible(),cur),box=$('elderResult'),body=$('elderBody'),wa=$('elderWa');
   box.hidden=false;box.className='eres '+cfg.cls;
   document.querySelectorAll('.e-dest').forEach(b=>b.setAttribute('aria-pressed',b.dataset.dest===dest));
@@ -506,11 +523,53 @@ function showElder(dest,user){
   wa.hidden=!waText;if(waText)wa.href='https://api.whatsapp.com/send?text='+encodeURIComponent(waText);
   if(user){speakText(msg);box.focus({preventScroll:true});box.scrollIntoView({behavior:'smooth',block:'start'})}
 }
+const ARR=[['Temuco','d-to'],['Nueva Imperial','d-imperial'],['Galvarino','d-galvarino']];
+function arrList(o,rows,from){const L=[];
+  rows.forEach(r=>{if(r.st[0]===o&&r.st.indexOf('Cholchol')>0)r.ts.forEach(x=>{if(m(x)>=from)L.push({r:r,x:x,diff:m(x)-from})})});
+  return L.sort((a,b)=>a.diff-b.diff)}
+function nextArr(o){const keep=view;
+  try{for(let k=1;k<=7;k++){const d=new Date();d.setDate(d.getDate()+k);
+    const type=dayType(d),dow=type==='weekday'?d.getDay():1;view=type;
+    const L=arrList(o,visible(dow),0);
+    if(L.length)return{b:L[0],type:type,dow:dow,day:k===1?'Mañana':'El '+['domingo','lunes','martes','miércoles','jueves','viernes','sábado'][d.getDay()]}}
+  return null}finally{view=keep}}
+function showArrivals(user){
+  const cur=nowMin(),dow=vdow(),rows=visible(),box=$('elderResult'),body=$('elderBody'),wa=$('elderWa'),vz=[],wz=[];
+  box.hidden=false;box.className='eres d-chol';
+  document.querySelectorAll('.e-dest').forEach(b=>b.setAttribute('aria-pressed',b.dataset.dest==='Cholchol'));
+  const secs=ARR.map(a=>{const o=a[0],L=arrList(o,rows,cur);
+    let h='<section class="e-arr '+a[1]+'"><div class="e-arr-h">Desde '+o+' ➔ Cholchol</div><div class="e-main">';
+    if(L.length){
+      const n=L[0],i=info(n.r,n.x,dow),when=n.diff?'Sale en '+spanDur(n.diff):'¡Sale ahora mismo!',seen=new Set([n.x]),later=[];
+      L.forEach(q=>{if(!seen.has(q.x)&&later.length<2){seen.add(q.x);later.push(q)}});
+      h+='<p class="e-lbl">Sale de '+o+' a las</p><p class="e-time">'+n.x+'<span> hrs</span></p><p class="e-when">'+when+'</p><p class="e-co"><b>'+i.co+'</b>'+(i.x?'<small>'+i.x+'</small>':'')+'</p></div>';
+      if(later.length)h+='<div class="e-later"><p>Después salen de '+o+':</p><ul>'+later.map(q=>'<li><b>'+q.x+'</b><small>'+info(q.r,q.x,dow).co+'</small></li>').join('')+'</ul></div>';
+      vz.push('Desde '+o+': el próximo sale a las '+say(n.x)+'. '+(n.diff?when:'Sale ahora mismo')+'. Empresa '+i.co+'.');
+      wz.push('Desde '+o+': sale a las '+n.x+' hrs ('+i.co+').');
+    }else{
+      const t=nextArr(o);
+      if(t){const i=info(t.b.r,t.b.x,t.dow);
+        h+='<p class="e-none">Hoy ya no quedan buses desde '+o+'</p><p class="e-lbl">'+t.day+' ('+DN[t.type]+') el primero sale a las</p><p class="e-time">'+t.b.x+'<span> hrs</span></p><p class="e-co"><b>'+i.co+'</b></p></div>';
+        vz.push('Desde '+o+': hoy ya no quedan buses. '+t.day+' el primero sale a las '+say(t.b.x)+'.');
+        wz.push('Desde '+o+': hoy no quedan; '+t.day.toLowerCase()+' el primero sale a las '+t.b.x+' hrs.');
+      }else{
+        h+='<p class="e-none">No tenemos horarios de buses desde '+o+' hacia Cholchol.</p></div>';
+        vz.push('Desde '+o+': no tenemos horarios de buses hacia Cholchol.');
+        wz.push('Desde '+o+': sin horarios disponibles.');
+      }
+    }
+    return h+'</section>'}).join('');
+  body.innerHTML='<div class="e-band">Buses que llegan a Cholchol</div><p class="e-note">⚠ Las horas son de SALIDA desde cada ciudad. El bus llega a Cholchol un rato después.</p>'+secs;
+  const msg='Buses que llegan a Cholchol. '+vz.join(' ')+' Recuerda: las horas son de salida desde cada ciudad.';
+  box.dataset.msg=msg;
+  wa.hidden=false;wa.href='https://api.whatsapp.com/send?text='+encodeURIComponent('Buses que llegan a Cholchol (hora de salida desde cada ciudad). '+wz.join(' '));
+  if(user){speakText(msg);box.focus({preventScroll:true});box.scrollIntoView({behavior:'smooth',block:'start'})}
+}
 function refreshElder(){if(elderDest&&!$('viewElder').hidden)showElder(elderDest,false)}
 
 document.querySelectorAll('.e-dest').forEach(b=>{b.onclick=()=>showElder(b.dataset.dest,true)});
 $('elderReplay').onclick=()=>speakText($('elderResult').dataset.msg||'',true);
-$('speakWelcome').onclick=()=>speakText('Por favor, toca el botón del lugar al que deseas viajar: Temuco, Nueva Imperial o Galvarino.',true);
+$('speakWelcome').onclick=()=>speakText('Por favor, toca el botón del lugar al que deseas viajar: Temuco, Nueva Imperial o Galvarino. Si quieres saber qué buses llegan a Cholchol, toca el botón Cholchol.',true);
 
 const setVoiceBtn=()=>{const b=$('elderVoice');b.textContent=voiceOn?'🔊 Voz: Sí':'🔇 Voz: No';b.setAttribute('aria-pressed',voiceOn)};
 $('elderVoice').onclick=()=>{voiceOn=!voiceOn;if(!voiceOn&&hasVoice)window.speechSynthesis.cancel();setVoiceBtn()};
