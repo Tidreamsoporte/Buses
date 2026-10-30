@@ -1,17 +1,17 @@
 {
-  "id": "./",
-  "name": "Horarios de Buses · Cholchol",
+  "name": "Horarios de Buses Interurbanos",
   "short_name": "Buses Cholchol",
-  "description": "Próximo bus entre Cholchol, Temuco, Nueva Imperial y Galvarino, en tiempo real.",
-  "lang": "es",
-  "start_url": "./",
+  "description": "Horarios de buses entre Cholchol, Temuco, Galvarino y Nueva Imperial, con el próximo bus en tiempo real.",
+  "lang": "es-CL",
+  "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#0f2a3d",
+  "orientation": "portrait",
+  "background_color": "#eef2f7",
   "theme_color": "#0f766e",
   "icons": [
-    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
-    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
-    {"src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }
