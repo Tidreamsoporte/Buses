@@ -266,16 +266,16 @@ body:has(.modal:not([hidden])){overflow:hidden}
   <p>Horarios referenciales de recorrido. Si tienes sugerencias, contáctanos por nuestros canales oficiales.</p>
 </footer>
 
-<!-- Banner flotante para instalar como PWA -->
-<div id="installBanner" class="hidden fixed bottom-3 inset-x-3 sm:left-auto sm:right-4 sm:max-w-sm z-[90] bg-white rounded-2xl shadow-xl border border-slate-200 p-4">
+<!-- Banner flotante PWA corregido y estilizado -->
+<div id="installBanner" class="hidden fixed bottom-4 right-4 max-w-sm z-[90] bg-white rounded-2xl shadow-2xl border border-slate-200 p-4 transition-all">
   <div class="flex items-start gap-3">
-    <img src="icon-192.png" alt="" class="w-14 h-14 rounded-2xl shadow-sm object-cover">
+    <img src="icon-192.png" alt="" class="w-12 h-12 rounded-xl shadow-sm object-cover flex-none" onerror="this.hidden=true">
     <div class="flex-1">
-      <p class="text-sm font-bold">Instala Buses Cholchol</p>
+      <p class="text-sm font-bold text-slate-800">Instala Buses Cholchol</p>
       <p id="installText" class="text-xs text-slate-500 mt-0.5">Ten los horarios a un toque, directo en tu pantalla de inicio.</p>
       <div class="flex gap-2 mt-3 justify-end">
-        <button id="installLater" class="px-3 py-2 rounded-xl text-xs font-semibold text-slate-500 hover:bg-slate-100 cursor-pointer">Ahora no</button>
-        <button id="installBtn" class="px-4 py-2 rounded-xl text-xs font-semibold text-white bg-emerald-600 hover:bg-emerald-700 cursor-pointer"><i class="fa-solid fa-download mr-1"></i>Instalar</button>
+        <button id="installLater" class="px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 cursor-pointer">Ahora no</button>
+        <button id="installBtn" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-white bg-emerald-600 hover:bg-emerald-700 cursor-pointer"><i class="fa-solid fa-download mr-1"></i>Instalar</button>
       </div>
     </div>
   </div>
@@ -500,39 +500,64 @@ $('elderSize').onclick=()=>setSize((sizeI+1)%SZ.length);
 try{const z=+localStorage.getItem('elderSz');setSize(SZ[z]?z:0)}catch(e){setSize(0)}
 if(!hasVoice)['elderVoice','speakWelcome','elderReplay'].forEach(id=>$(id).hidden=true);
 
-// Lógica de instalación PWA
+// Lógica de instalación PWA mejorada (se oculta si ya está instalada o si eligió ignorarla)
 let installEvent = null;
 const isStandalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
-const DISMISS_DAYS = 14;
 
 function hideInstall(remember) {
   $('installBanner').classList.add('hidden');
-  if (remember) localStorage.setItem('bus_install_dismiss', Date.now());
+  if (remember) localStorage.setItem('bus_install_dismiss', 'true');
 }
+
 function showInstall() {
-  const last = parseInt(localStorage.getItem('bus_install_dismiss')) || 0;
-  if (isStandalone || Date.now() - last < DISMISS_DAYS * 86400000) return;
-  setTimeout(() => $('installBanner').classList.remove('hidden'), 2500);
+  // Si ya está instalada como PWA o el usuario hizo clic en "Ahora no", no se muestra nunca
+  if (isStandalone || localStorage.getItem('bus_install_dismiss') === 'true') {
+    $('installBanner').classList.add('hidden');
+    return;
+  }
+  setTimeout(() => {
+    if (!isStandalone && localStorage.getItem('bus_install_dismiss') !== 'true') {
+      $('installBanner').classList.remove('hidden');
+    }
+  }, 2000);
 }
+
 async function installApp() {
   if (!installEvent) return;
   installEvent.prompt();
-  await installEvent.userChoice;
+  const choice = await installEvent.userChoice;
+  if (choice.outcome === 'accepted') {
+    hideInstall(true);
+  }
   installEvent = null;
-  hideInstall(false);
 }
 
-window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); installEvent = e; showInstall(); });
-window.addEventListener('appinstalled', () => hideInstall(false));
+window.addEventListener('beforeinstallprompt', e => { 
+  e.preventDefault(); 
+  installEvent = e; 
+  showInstall(); 
+});
+
+window.addEventListener('appinstalled', () => {
+  hideInstall(true);
+});
 
 $('installBtn').onclick = installApp;
 $('installLater').onclick = () => hideInstall(true);
 
+// Si ya se abrió desde la app instalada, lo ocultamos de inmediato
+if (isStandalone) {
+  $('installBanner').classList.add('hidden');
+}
+
+// Soporte especial para iOS (iPhone/iPad)
 if (/iphone|ipad|ipod/i.test(navigator.userAgent) && !/crios|fxios|edgios/i.test(navigator.userAgent)) {
-  $('installText').innerHTML = 'Toca <b>Compartir</b> <i class="fa-solid fa-arrow-up-from-bracket"></i> y luego <b>«Añadir a pantalla de inicio»</b>.';
-  $('installBtn').classList.add('hidden');
-  $('installLater').textContent = 'Entendido';
-  showInstall();
+  if (!isStandalone && localStorage.getItem('bus_install_dismiss') !== 'true') {
+    $('installText').innerHTML = 'Toca <b>Compartir</b> <i class="fa-solid fa-arrow-up-from-bracket"></i> y luego <b>«Añadir a pantalla de inicio»</b>.';
+    $('installBtn').classList.add('hidden');
+    $('installLater').textContent = 'Entendido';
+    showInstall();
+  }
 }
 
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
